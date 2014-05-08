@@ -7,12 +7,14 @@ angoolar.addFactory angoolar.StateManager = class StateManager extends angoolar.
 		angoolar.State
 		'$injector'
 		'$timeout'
+		'$log'
 	]
 
 	constructor: ->
 		super
 
-		@$pages = {}
+		@$pages            = {}
+		@$localizedStrings = {}
 
 		@$stats = new angoolar.Stats @$injector
 
@@ -25,6 +27,7 @@ angoolar.addFactory angoolar.StateManager = class StateManager extends angoolar.
 		return unless @$path?.length
 
 		@updatePage()
+		@updateLocalizedStrings()
 
 	$pathRegex: /#?\/([a-z]{2})\/([^\/\?]+)(\/([^\/\?]+))?/
 	updatePath: ( path ) ->
@@ -38,10 +41,27 @@ angoolar.addFactory angoolar.StateManager = class StateManager extends angoolar.
 	updatePage: ->
 		unless @$pages[ @$path ]?
 
+			pageDelay = Math.ceil Math.random() * 1000
+
 			@$stats.addPending()
-			@$timeout( ( -> ), 1000 ).then =>
-				@$pages[ @$path ] = {}
+			@$timeout( ( -> {} ), pageDelay ).then ( page ) =>
+				@$log.debug "#{ @$path } took #{ pageDelay }ms to load"
+				@State.updatedPage @$pages[ @$path ] = page
 				@$stats.pendingResolved()
 		else
 			# don't update the page on State if the request for the page hasn't finished yet
-			@State.updatedPage @$pages[ @$path ] unless @$stats.pendingCount
+			@State.updatedPage @$pages[ @$path ] unless @$pages[ @$path ]?.$_stats?.pendingCount
+
+	updateLocalizedStrings: ->
+		unless @$localizedStrings[ @$language ]?
+
+			localizedStringsDelay = Math.ceil Math.random() * 1000
+		
+			@$stats.addPending()
+			@$timeout( ( -> {} ), localizedStringsDelay ).then ( localizedStrings ) =>
+				@$log.debug "#{ @$language } took #{ localizedStringsDelay }ms to load"
+				@State.updatedLocalizedStrings @$localizedStrings[ @$language ] = localizedStrings
+				@$stats.pendingResolved()
+		else
+			# don't update the localizedStrings on State if the request for the localizedStrings hasn't finished yet
+			@State.updatedLocalizedStrings @$localizedStrings[ @$language ] unless @$localizedStrings[ @$language ]?.$_stats?.pendingCount

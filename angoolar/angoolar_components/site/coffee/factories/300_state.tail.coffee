@@ -16,4 +16,5 @@ angoolar.addFactory angoolar.State = class State extends angoolar.BaseFactory
 	stateChangeBegun   : => @$stateChanging = yes
 	stateChangeFinished: => @$stateChanging = no
 
-	updatedPage: ( @$page ) =>
+	updatedPage            : ( @$page ) =>
+	updatedLocalizedStrings: ( @$localizedStrings ) =>
