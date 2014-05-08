@@ -1,0 +1,17 @@
+{
+  "name": "something",
+  "authors": [
+    "Olen Davis <spelledlikeitsounds@gmail.com>"
+  ],
+  "private": true,
+  "dependencies": {
+    "angoolar": "~0.5.1",
+    "angoolar-resource": "~0.4.0",
+    "angoolar-browser": "~0.4.0",
+    "angoolar-jquery": "~0.0.0",
+    "angoolar-sanitize": "~0.2.0",
+    "angoolar-font-awesome": "~0.3.0",
+    "angoolar-ui-router": "~0.2.0",
+    "angoolar-animate": "~0.2.0"
+  }
+}
