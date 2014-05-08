@@ -5,6 +5,11 @@
 		ng-init     ="uiSrefs = [ 'things', 'stuff' ]"
 	>
 
+		<select
+			ng-options ="language for language in State.$languages"
+			ng-model   ="State.$language"
+		></select>
+
 		<a
 			ng-repeat ="uiSref in uiSrefs"
 			ui-sref   ="{{ uiSref }}"

@@ -21,6 +21,16 @@ angoolar.addFactory angoolar.StateManager = class StateManager extends angoolar.
 	initialize: ->
 		@$rootScope.$on '$stateChangeStart', ( event, toState, toParams ) => @updateState toState, toParams
 
+		@$rootScope.$watch(
+			=>
+				state : @$rootScope.$state.current
+				params: @$rootScope.$stateParams
+
+			( current ) => @updateState current.state, current.params
+
+			yes
+		)
+
 	updateState: ( state, params ) ->
 		@updatePath @$rootScope.$state.href state, params, relative: state # will be e.g. /en/home (WHEN HTML5 is available), #/en/home (for older browsers)
 
@@ -41,7 +51,7 @@ angoolar.addFactory angoolar.StateManager = class StateManager extends angoolar.
 	updatePage: ->
 		unless @$pages[ @$path ]?
 
-			pageDelay = Math.ceil Math.random() * 1000
+			pageDelay = 1000 + Math.ceil Math.random() * 1000
 
 			@$stats.addPending()
 			@$timeout( ( -> {} ), pageDelay ).then ( page ) =>
@@ -55,7 +65,7 @@ angoolar.addFactory angoolar.StateManager = class StateManager extends angoolar.
 	updateLocalizedStrings: ->
 		unless @$localizedStrings[ @$language ]?
 
-			localizedStringsDelay = Math.ceil Math.random() * 1000
+			localizedStringsDelay = 1000 + Math.ceil Math.random() * 1000
 		
 			@$stats.addPending()
 			@$timeout( ( -> {} ), localizedStringsDelay ).then ( localizedStrings ) =>
