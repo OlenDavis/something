@@ -1,0 +1,20 @@
+<div>
+
+	<div
+		s-on-resize ="headerHeight = height"
+		ng-init     ="uiSrefs = [ 'things', 'stuff' ]"
+	>
+		<a
+			ng-repeat ="uiSref in uiSrefs"
+			ui-sref   ="{{ uiSref }}"
+		>
+			{{ uiSref }}
+		</a>
+	</div>
+
+	<div
+		ng-style ="{ 'padding-top': headerHeight }"
+		ng-transclude
+	></div>
+
+</div>
