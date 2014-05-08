@@ -3,3 +3,5 @@ node_modules
 html/css
 html/fonts
 html/js
+angoolar/grunt_build
+html/*.html

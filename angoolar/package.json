@@ -27,7 +27,7 @@
 	"deployFontsDir"     : "../html/fonts",
 	"deployImagesDir"    : "../html/images",
 	"deployTemplatesDir" : "../html/templates",
-	"deployHtmlTargetDir": "../html/views/layouts",
+	"deployHtmlTargetDir": "../html",
 	"staticFileDirectory": "",
 	"applicationConfig"  : {
 		"development": {
