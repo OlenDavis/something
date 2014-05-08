@@ -24,8 +24,10 @@ angoolar.addConfigBlock class AppConfig extends angoolar.StatefulConfigBlock
 			parent     : 'site'
 			url        : 'things/'
 			templateUrl: 'things.html'
+			controller : angoolar.ThingsController
 
 		@addState 'stuff',
 			parent     : 'site'
 			url        : 'stuff/'
 			templateUrl: 'stuff.html'
+			controller : angoolar.StuffController

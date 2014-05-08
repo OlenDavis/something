@@ -4,12 +4,17 @@
 		s-on-resize ="headerHeight = height"
 		ng-init     ="uiSrefs = [ 'things', 'stuff' ]"
 	>
+
 		<a
 			ng-repeat ="uiSref in uiSrefs"
 			ui-sref   ="{{ uiSref }}"
 		>
-			{{ uiSref }}
+			{{ uiSref }}{{ ! $last ? ', ' : '' }}
 		</a>
+
+		<span ng-if="State.$stateChanging">
+			loading...
+		</span>
 	</div>
 
 	<div
