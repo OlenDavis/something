@@ -1,0 +1,73 @@
+$with-modifier-class-fallbacks: true;
+
+@mixin when-hovered {
+	@if $with-modifier-class-fallbacks { &:hover, &.#{ $class-hover } { @content; } }
+	@else                              { &:hover                      { @content; } }
+}
+
+@mixin when-at {
+	@if $with-modifier-class-fallbacks { &:hover, &.#{ $class-hover }, &:focus { @content; } }
+	@else                              { &:hover,                      &:focus { @content; } }
+}
+
+@mixin when-just-touching {
+	@if $with-modifier-class-fallbacks { &:focus { @content; } }
+	@else                              { &:focus { @content; } }
+}
+
+@mixin when-active {
+	@if $with-modifier-class-fallbacks { &:active, &.#{ $class-active } { @content; } }
+	@else                              { &:active                       { @content; } }
+}
+
+@mixin when-touching {
+	@if $with-modifier-class-fallbacks { &:hover, &.#{ $class-hover } { &:active, &.#{ $class-active } { @content; } } }
+	@else                              { &:hover                      { &:active                       { @content; } } }
+}
+
+@mixin whenever {
+	@if $with-modifier-class-fallbacks { &, &:hover, &.#{ $class-hover }, &:focus, &:active, &.#{ $class-active } { @content; } }
+	@else                              { &, &:hover,                      &:focus, &:active,                      { @content; } }
+}
+
+@mixin when-disabled {
+	@if $with-modifier-class-fallbacks { &[disabled], &.#{ $class-disabled } { @content; } }
+	@else                              { &[disabled]                         { @content; } }
+}
+
+@mixin when-retina {
+	@if $with-modifier-class-fallbacks { &.#{ $class-retina }, .#{ $class-retina } & { @content; } }
+	@media (-webkit-min-device-pixel-ratio: 1.5), (min-resolution: 144dpi), (min-resolution: 2dppx) { @content; }
+}
+
+@mixin when-mobile {
+	@if $with-modifier-class-fallbacks { &.#{ $class-mobile }, .#{ $class-mobile } & { @content; } }
+	@media only screen and ( max-width: 767px )                                      { @content; }
+}
+
+@mixin when-first {
+	&:first-child, .#{ $class-first } {
+		@content;
+	}
+}
+
+@mixin when-last {
+	&:last-child, .#{ $class-last } {
+		@content;
+	}
+}
+
+@mixin when-ff {
+	.#{ $class-ff } & {
+		@content;
+	}
+}
+
+@function get-when-hovered-class-name(  $class-name ) { @return $class-name + "-#{ $class-when-hovered  }"; }
+@function get-when-active-class-name(   $class-name ) { @return $class-name + "-#{ $class-when-active   }"; }
+@function get-when-touching-class-name( $class-name ) { @return $class-name + "-#{ $class-when-touching }"; }
+@function get-when-retina-class-name(   $class-name ) { @return $class-name + "-#{ $class-when-retina   }"; }
+@function get-when-mobile-class-name(   $class-name ) { @return $class-name + "-#{ $class-when-mobile   }"; }
+@function get-when-first-class-name(    $class-name ) { @return $class-name + "-#{ $class-when-first    }"; }
+@function get-when-last-class-name(     $class-name ) { @return $class-name + "-#{ $class-when-last     }"; }
+@function get-when-ff-class-name(       $class-name ) { @return $class-name + "-#{ $class-when-ff       }"; }

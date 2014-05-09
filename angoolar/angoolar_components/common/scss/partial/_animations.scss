@@ -1,0 +1,43 @@
+
+// .#{ $class-rotated-back } {
+// 	@ include rotated-back;
+// }
+
+// .#{ $class-rotated-forward } {
+// 	@ include rotated-forward;
+// }
+
+// @ include keyframes-fade-in-rotate-forward;
+// .#{ $class-fade-in-rotate-forward } {
+// 	@ include fade-in-rotate-forward;
+// }
+
+// @ include keyframes-fade-out-rotate-back;
+// .#{ $class-fade-out-rotate-back } {
+// 	@ include fade-out-rotate-back;
+// }
+
+// @ include keyframes-spin;
+// .#{ $class-spin } {
+// 	@ include spin;
+// }
+
+// @ include keyframes-fade-out;
+// .#{ $class-fade-out } {
+// 	@ include fade-out;
+// }
+
+@include keyframes-fade-in;
+.#{ $class-fade-in } {
+	@include fade-in;
+}
+
+@include keyframes-scale-in;
+.#{ $class-scale-in } {
+	@include scale-in;
+}
+
+// @ include keyframes-pulse;
+// .#{ $class-pulse } {
+// 	@ include pulse;
+// }

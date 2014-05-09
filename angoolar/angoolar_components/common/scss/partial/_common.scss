@@ -1,0 +1,124 @@
+@import "compass";
+
+$legacy-support-for-ie: true;
+
+//////////////////////// GLOBAL THEMING PARAMETERS
+
+$default-mostly: .45;
+$default-barely: .80;
+
+$default-lightening: 10%; //30%;
+$default-darkening : 5%; //15%;
+$default-desaturation: 90%;
+
+$blue : #00ADEF;
+$red  : #E51B24;
+$white: white;
+$black: black;
+
+//                        light,          dark,          lightening,          darkening
+$default-primary-colors: $white,        $black, $default-lightening, $default-darkening;
+
+//                          light,   dark,          lightening,          darkening
+$default-secondary-colors: $white, $black, $default-lightening, $default-darkening;
+$black-secondary-colors  : $black, $black, $default-lightening, $default-darkening;
+$blue-secondary-colors   :  $blue, $black, $default-lightening, $default-darkening;
+$red-secondary-colors    :   $red, $black, $default-lightening, $default-darkening;
+
+//                              shadow, shadow-opacity, shadow-primary-depth, shadow-secondary-depth, shadow-hovered-depth-factor
+$default-shadow-theming:         black,             .5,                  2px,                    1px,                        1.25;
+
+//              border-radius, border-width, border-style, border-opacity, border-heavy-opacity-factor, border-thick-factor
+$default-border-theming : 3px,          1px,        solid,              1,                           1,                   3;
+
+//                     standard-padding,          less-padding,          more-padding,      way-more-padding,       standard-margin,           less-margin,           more-margin,       way-more-margin
+$default-spacing:                  17px,                   7px,                  30px,                  37px,                  10px,                   7px,                  30px,                  37px;
+$mobile-spacing :              17px / 1,                   7px,            30px / 1.5,            37px / 1.5,                  10px,                   7px,            30px / 1.5,            37px / 1.5;
+
+//                 is-themeless, with-this-modifiers, with-themed-style, disable-inverse, disable-secondary, with-when-hovered, with-when-active, with-when-touching, with-when-retina, with-when-mobile, with-when-first, with-when-last, with-when-ff, with-when-ie
+$default-theme-modifiers: false,               false,              true,            true,              true,             false,            false,              false,            false,            false,           false,          false,        false,        false;
+$theme-modifiers        : false,               false,              true,            true,              true,              true,             true,              false,            false,            false,           false,          false,        false,        false;
+
+//              without-base, without-text-styles, without-rounding, without-padding, without-margin, without-shadows, without-borders, without-inputs, without-buttons, without-coloring
+$default-theme-styles: false,               false,             true,           false,          false,           false,           false,          false,            true,            false;
+$theme-styles        :  true,                true,             true,            true,           true,            true,           false,          false,           false,            false;
+
+//////////////////////// TEXT STYLING
+$round-to-nearest-half-line: true;
+$base-font-size            : 14px;
+$base-line-height          : 18px;
+
+$sans-serif-font-family: Helvetica, Arial, sans-serif;
+$serif-font-family: serif;
+
+$h6-font-size: 14px;
+$h5-font-size: 20px;
+$h4-font-size: 22px;
+$h3-font-size: 26px;
+$h2-font-size: 32px;
+$h1-font-size: 48px;
+
+$text-lines: 1;
+
+$small     : 80%;
+$very-small: 59.25%;
+
+/*                     selector,             font-family, color,       font-size,       lines, leader, leader-property, trailer, trailer-property,     line-height-matching-properties */
+$default-text-styles: (
+	(                      'h6',                   false, false,   $h6-font-size,        true,  false,           false,   false,            false,                               false ),
+	(                      'h5',                   false, false,   $h5-font-size,        true,  false,           false,   false,            false,                               false ),
+	(                      'h4',                   false, false,   $h4-font-size,        true,  false,           false,   false,            false,                               false ),
+	(                      'h3',                   false, false,   $h3-font-size,        true,  false,           false,   false,            false,                               false ),
+	(                      'h2',                   false, false,   $h2-font-size,        true,  false,           false,   false,            false,                               false ),
+	(                      'h1',                   false, false,   $h1-font-size,        true,  false,           false,   false,            false,                               false ),
+	(                       'p',                   false, false, $base-font-size,        true,  false,           false,   false,            false,                               false )
+);
+
+/*                    named, extends,          primary-colors,          secondary-colors,          shadow-theming,           border-theming,  spacing-theming,         text-theming,          theme-modifiers,          theme-styles */
+$default-theme: ( 'default',  'body', $default-primary-colors, $default-secondary-colors, $default-shadow-theming,  $default-border-theming, $default-spacing, $default-text-styles, $default-theme-modifiers, $default-theme-styles );
+$black-theme  : (   'black',   false, $default-primary-colors,   $black-secondary-colors, $default-shadow-theming,  $default-border-theming, $default-spacing, $default-text-styles,         $theme-modifiers,         $theme-styles );
+$blue-theme   : (    'blue',   false, $default-primary-colors,    $blue-secondary-colors, $default-shadow-theming,  $default-border-theming, $default-spacing, $default-text-styles,         $theme-modifiers,         $theme-styles );
+$red-theme    : (     'red',   false, $default-primary-colors,     $red-secondary-colors, $default-shadow-theming,  $default-border-theming, $default-spacing, $default-text-styles,         $theme-modifiers,         $theme-styles );
+
+$default-themes: ( $black-theme, $blue-theme, $red-theme );
+
+//////////////////////// GLOBAL LAYOUT PARAMETERS
+
+$ratio-properties: ( width min-width max-width ); // This determines for which properties a range of ratio classes will be generated; you could also use ( width, max-width ) for instance.
+
+$ratio-denominator-range: ( 2, 5 ); // These are denominators for which .ratio-#{ $numerator }-#{ $denominator } classes will be generated.
+// So, for ( 2, 3 ), the classes .ratio-1-2, .ratio-1-3, and .ratio-2-3 would be generated.
+
+$default-underestimation: 1%; // This is the default underestimation of the percentages generated for each of the ratio classes.
+// So, for .ratio-1-2 with an underestimation of 1%, the width generated would be 49% rather than 50%.
+
+$reasonable: 10em;
+
+//////////////////////// GLOBAL ANIMATION PARAMETERS
+
+$default-transition-duration: 300ms;
+$default-transition-function: ease-in-out;
+
+$default-perspective: 50em;
+$default-origin-y   : 0%;
+$default-animation-duration: $default-transition-duration;
+$pulse-scale-extent: .1;
+
+@function get-hoverable-class-name( $hoverable-id ) {
+	@return "#{ $class-hoverable }-#{ $hoverable-id }";
+}
+
+@function get-target-class-name( $target-id: false ) {
+	@return if( $target-id == false, $class-target, "#{ $class-target }-#{ $target-id }" );
+}
+
+@import "class_names";
+@import "class_mixins";
+
+@import "animation_names";
+@import "animation_mixins";
+@import "animation_keyframes";
+
+@import "common_theming";
+
+@import "common_animation";

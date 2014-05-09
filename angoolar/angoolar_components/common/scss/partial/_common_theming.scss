@@ -1,0 +1,440 @@
+@import "common_theming_modifiers";
+@import "common_theming_utilities";
+
+// Global config variables
+$current-disable-with-when-hovered : false;
+$current-disable-with-when-active  : false;
+$current-disable-with-when-touching: false;
+$current-disable-with-when-retina  : false;
+$current-disable-with-when-mobile  : false;
+$current-disable-with-when-first   : false;
+$current-disable-with-when-last    : false;
+$current-disable-with-when-ff      : false;
+$current-disable-with-when-ie      : false;
+
+// Style-grained global config variables:
+$current-theme    : $default-theme;
+$current-inverse  : false;
+$current-secondary: false;
+
+// Theme-grained global config variables:
+$current-is-themeless: true;
+
+$current-with-this-modifiers: true; // indicates whether to render support for the secondary-this and inverse-this modifiers
+$current-with-themed-style  : true; // indicates whether to render the fully themed style class for each style; e.g. .blue-inverse-secondary-button rather than .blue.inverse.secondary.button
+
+$current-disable-inverse  : true;
+$current-disable-secondary: true;
+
+$current-with-theme-when-hovered : false;
+$current-with-theme-when-active  : false;
+$current-with-theme-when-touching: false;
+$current-with-theme-when-retina  : false;
+$current-with-theme-when-mobile  : false;
+$current-with-theme-when-first   : false;
+$current-with-theme-when-last    : false;
+$current-with-theme-when-ff      : false;
+$current-with-theme-when-ie      : false;
+
+@mixin declare-themed-style(
+	$class-name        ,
+	$has-inverse       : false,
+	$has-secondary     : false,
+	$with-when-hovered : false,
+	$with-when-active  : false, 
+	$with-when-touching: false, 
+	$with-when-retina  : false, 
+	$with-when-mobile  : false, 
+	$with-when-first   : false, 
+	$with-when-last    : false, 
+	$with-when-ff      : false,
+	$with-when-ie      : false
+) {
+	@if $current-disable-inverse   { $has-inverse  : false; }                    
+	@if $current-disable-secondary { $has-secondary: false; }
+
+	@if $current-disable-with-when-hovered  { $with-when-hovered : false; }
+	@if $current-disable-with-when-active   { $with-when-active  : false; }
+	@if $current-disable-with-when-touching { $with-when-touching: false; }
+	@if $current-disable-with-when-retina   { $with-when-retina  : false; }
+	@if $current-disable-with-when-mobile   { $with-when-mobile  : false; }
+	@if $current-disable-with-when-first    { $with-when-first   : false; }
+	@if $current-disable-with-when-last     { $with-when-last    : false; }
+	@if $current-disable-with-when-ff       { $with-when-ff      : false; }
+	@if $current-disable-with-when-ie       { $with-when-ie      : false; }
+
+	$class-name-when-hovered : get-when-hovered-class-name(  $class-name );
+	$class-name-when-active  : get-when-active-class-name(   $class-name );
+	$class-name-when-touching: get-when-touching-class-name( $class-name );
+	$class-name-when-retina  : get-when-retina-class-name(   $class-name );
+	$class-name-when-mobile  : get-when-mobile-class-name(   $class-name );
+	$class-name-when-first   : get-when-first-class-name(    $class-name );
+	$class-name-when-last    : get-when-last-class-name(     $class-name );
+	$class-name-when-ff      : get-when-ff-class-name(       $class-name );
+	$class-name-when-ie      : get-when-ie-class-name(       $class-name );
+
+	$current-inverse  : false;
+	$current-secondary: false;
+
+	@include                           declare-style( $class-name: $class-name               ) {                          @content;     }
+	@if $with-when-hovered  { @include declare-style( $class-name: $class-name-when-hovered  ) { @include when-hovered  { @content; } } }
+	@if $with-when-active   { @include declare-style( $class-name: $class-name-when-active   ) { @include when-active   { @content; } } }
+	@if $with-when-touching { @include declare-style( $class-name: $class-name-when-touching ) { @include when-touching { @content; } } }
+	@if $with-when-retina   { @include declare-style( $class-name: $class-name-when-retina   ) { @include when-retina   { @content; } } }
+	@if $with-when-mobile   { @include declare-style( $class-name: $class-name-when-mobile   ) { @include when-mobile   { @content; } } }
+	@if $with-when-first    { @include declare-style( $class-name: $class-name-when-first    ) { @include when-first    { @content; } } }
+	@if $with-when-last     { @include declare-style( $class-name: $class-name-when-last     ) { @include when-last     { @content; } } }
+	@if $with-when-ff       { @include declare-style( $class-name: $class-name-when-ff       ) { @include when-ff       { @content; } } }
+	@if $with-when-ie       { @include declare-style( $class-name: $class-name-when-ie       ) { @include when-ie       { @content; } } }
+
+	@if $has-inverse {
+		$current-inverse  : true;
+		$current-secondary: false;
+		@include                           declare-inverse-style( $class-name: $class-name               ) {                          @content;     }
+		@if $with-when-hovered  { @include declare-inverse-style( $class-name: $class-name-when-hovered  ) { @include when-hovered  { @content; } } }
+		@if $with-when-active   { @include declare-inverse-style( $class-name: $class-name-when-active   ) { @include when-active   { @content; } } }
+		@if $with-when-touching { @include declare-inverse-style( $class-name: $class-name-when-touching ) { @include when-touching { @content; } } }
+		@if $with-when-retina   { @include declare-inverse-style( $class-name: $class-name-when-retina   ) { @include when-retina   { @content; } } }
+		@if $with-when-mobile   { @include declare-inverse-style( $class-name: $class-name-when-mobile   ) { @include when-mobile   { @content; } } }
+		@if $with-when-first    { @include declare-inverse-style( $class-name: $class-name-when-first    ) { @include when-first    { @content; } } }
+		@if $with-when-last     { @include declare-inverse-style( $class-name: $class-name-when-last     ) { @include when-last     { @content; } } }
+		@if $with-when-ff       { @include declare-inverse-style( $class-name: $class-name-when-ff       ) { @include when-ff       { @content; } } }
+		@if $with-when-ie       { @include declare-inverse-style( $class-name: $class-name-when-ie       ) { @include when-ie       { @content; } } }
+	}
+
+	@if $has-secondary {
+		$current-inverse  : false;
+		$current-secondary: true;
+		@include                           declare-secondary-style( $class-name: $class-name               ) {                          @content;     }
+		@if $with-when-hovered  { @include declare-secondary-style( $class-name: $class-name-when-hovered  ) { @include when-hovered  { @content; } } }
+		@if $with-when-active   { @include declare-secondary-style( $class-name: $class-name-when-active   ) { @include when-active   { @content; } } }
+		@if $with-when-touching { @include declare-secondary-style( $class-name: $class-name-when-touching ) { @include when-touching { @content; } } }
+		@if $with-when-retina   { @include declare-secondary-style( $class-name: $class-name-when-retina   ) { @include when-retina   { @content; } } }
+		@if $with-when-mobile   { @include declare-secondary-style( $class-name: $class-name-when-mobile   ) { @include when-mobile   { @content; } } }
+		@if $with-when-first    { @include declare-secondary-style( $class-name: $class-name-when-first    ) { @include when-first    { @content; } } }
+		@if $with-when-last     { @include declare-secondary-style( $class-name: $class-name-when-last     ) { @include when-last     { @content; } } }
+		@if $with-when-ff       { @include declare-secondary-style( $class-name: $class-name-when-ff       ) { @include when-ff       { @content; } } }
+		@if $with-when-ie       { @include declare-secondary-style( $class-name: $class-name-when-ie       ) { @include when-ie       { @content; } } }
+	}
+
+	@if $has-inverse and $has-secondary {
+		$current-inverse  : true;
+		$current-secondary: true;
+		@include                           declare-inverse-secondary-style( $class-name: $class-name               ) {                          @content;     }
+		@if $with-when-hovered  { @include declare-inverse-secondary-style( $class-name: $class-name-when-hovered  ) { @include when-hovered  { @content; } } }
+		@if $with-when-active   { @include declare-inverse-secondary-style( $class-name: $class-name-when-active   ) { @include when-active   { @content; } } }
+		@if $with-when-touching { @include declare-inverse-secondary-style( $class-name: $class-name-when-touching ) { @include when-touching { @content; } } }
+		@if $with-when-retina   { @include declare-inverse-secondary-style( $class-name: $class-name-when-retina   ) { @include when-retina   { @content; } } }
+		@if $with-when-mobile   { @include declare-inverse-secondary-style( $class-name: $class-name-when-mobile   ) { @include when-mobile   { @content; } } }
+		@if $with-when-first    { @include declare-inverse-secondary-style( $class-name: $class-name-when-first    ) { @include when-first    { @content; } } }
+		@if $with-when-last     { @include declare-inverse-secondary-style( $class-name: $class-name-when-last     ) { @include when-last     { @content; } } }
+		@if $with-when-ff       { @include declare-inverse-secondary-style( $class-name: $class-name-when-ff       ) { @include when-ff       { @content; } } }
+		@if $with-when-ie       { @include declare-inverse-secondary-style( $class-name: $class-name-when-ie       ) { @include when-ie       { @content; } } }
+	}
+}
+
+@mixin declare-base-theme( $theme: $default-theme ) {
+	@include declare-theme( $theme: $theme );
+}
+
+@mixin declare-themes( $themes: $default-themes ) {
+	//////////////////////// THEME-DEPENDENT STYLES
+	@each $theme in $themes {
+		@include declare-theme( $theme );
+	}
+}
+
+@mixin declare-theme( $theme ) {
+	$current-theme: $theme;
+
+	$current-is-themeless: get-theme-is-themeless();
+
+	@debug "Prepping '#{ get-theme-name() }' theme...";
+
+	$current-with-this-modifiers: get-theme-with-this-modifiers();
+	$current-with-themed-style  : get-theme-with-themed-style();
+
+	$current-disable-inverse  : get-theme-disable-inverse();
+	$current-disable-secondary: get-theme-disable-secondary();
+
+	$current-with-theme-when-hovered : get-theme-with-when-hovered();
+	$current-with-theme-when-active  : get-theme-with-when-active();
+	$current-with-theme-when-touching: get-theme-with-when-touching();
+	$current-with-theme-when-retina  : get-theme-with-when-retina();
+	$current-with-theme-when-mobile  : get-theme-with-when-mobile();
+	$current-with-theme-when-first   : get-theme-with-when-first();
+	$current-with-theme-when-last    : get-theme-with-when-last();
+	$current-with-theme-when-ff      : get-theme-with-when-ff();
+	$current-with-theme-when-ie      : get-theme-with-when-ie();
+
+	@include actually-declare-theme {
+		@if get-theme-styles-without-text-styles() == false {
+			// This means, "If there are more than one set of text styles, then declare each of them, or just declare the one set of them."
+			$theme-text-styles: get-text-styles( $theme );
+			@if length( $theme-text-styles ) != $text-styles-length or length( nth( $theme-text-styles, 1 ) ) == $text-styles-length {
+				@each $text-styles in $theme-text-styles {
+					@include declare-themed-style( get-text-class-name( $text-styles ) ) { @include text-styles( $text-styles ); }
+				}
+			}
+			@else {
+				@include declare-themed-style( get-text-class-name( $theme-text-styles ) ) { @include text-styles( $theme-text-styles ); }
+			}
+		}
+
+		/////////////////////////////////////////////////
+		//////////////////////// NON-INVERTIBLE/SECONDARY
+		// Rounded Borders
+		@if get-theme-styles-without-rounding() == false {
+			@include declare-themed-style( $class-rounded,   $with-when-hovered: true                                                ) { @include rounded; }
+			@include declare-themed-style( $class-t-rounded,                           $with-when-first: true                        ) { @include t-rounded; }
+			@include declare-themed-style( $class-r-rounded,                           $with-when-first: true, $with-when-last: true ) { @include r-rounded; }
+			@include declare-themed-style( $class-b-rounded,                                                   $with-when-last: true ) { @include b-rounded; }
+			@include declare-themed-style( $class-l-rounded,                           $with-when-first: true, $with-when-last: true ) { @include l-rounded; }
+			@include declare-themed-style( $class-tl-rounded                                                                         ) { @include tl-rounded; }
+			@include declare-themed-style( $class-tr-rounded                                                                         ) { @include tr-rounded; }
+			@include declare-themed-style( $class-bl-rounded                                                                         ) { @include bl-rounded; }
+			@include declare-themed-style( $class-br-rounded                                                                         ) { @include br-rounded; }
+		}
+		// Padding
+		@if get-theme-styles-without-padding() == false {
+			@include declare-themed-style( $class-padded,    $with-when-hovered: true ) { @include padded; }
+			@include declare-themed-style( $class-t-padded,  $with-when-hovered: true ) { @include t-padded; }
+			@include declare-themed-style( $class-r-padded,  $with-when-hovered: true ) { @include r-padded; }
+			@include declare-themed-style( $class-b-padded,  $with-when-hovered: true ) { @include b-padded; }
+			@include declare-themed-style( $class-l-padded,  $with-when-hovered: true ) { @include l-padded; }
+			@include declare-themed-style( $class-lr-padded, $with-when-hovered: true, $with-when-mobile: true ) { @include lr-padded; }
+			@include declare-themed-style( $class-tb-padded, $with-when-hovered: true, $with-when-mobile: true ) { @include tb-padded; }
+			@include declare-themed-style( $class-table-padded                        ) { @include table-padded; }
+		}
+		// Margins
+		@if get-theme-styles-without-margin() == false {
+		  	@include declare-themed-style( $class-margin                                                      ) { @include margin;   }
+		  	@include declare-themed-style( $class-t-margin, $with-when-hovered: true, $with-when-mobile: true ) { @include t-margin; }
+			@include declare-themed-style( $class-r-margin                                                    ) { @include r-margin; }
+			@include declare-themed-style( $class-b-margin                                                    ) { @include b-margin; }
+			@include declare-themed-style( $class-l-margin                                                    ) { @include l-margin; }
+			@include declare-themed-style( $class-lr-margin                                                   ) { @include lr-margin; }
+			@include declare-themed-style( $class-tb-margin                                                   ) { @include tb-margin; }
+		}
+		// Shadows
+		@if get-theme-styles-without-shadows() == false {
+			@include declare-themed-style( $class-inset-shadow,      $with-when-hovered : true, $with-when-touching: true, $with-when-active: true ) { @include inset-shadow; }
+			@include declare-themed-style( $class-deep-shadow,       $with-when-hovered : true                                                     ) { @include deep-shadow; }
+			@include declare-themed-style( $class-deep-inset-shadow, $with-when-hovered : true                                                     ) { @include deep-inset-shadow; }
+			@include declare-themed-style( $class-shadow,            $with-when-hovered : true                                                     ) { @include shadow; }
+			@include declare-themed-style( $class-no-shadow,         $with-when-hovered : true                                                     ) { @include no-shadow; }
+			// @ include declare-themed-style( $class-button-shadow                                                                                    ) { @include button-shadow; }
+			@include declare-themed-style( $class-text-shadowed,     $with-when-hovered : true                                                     ) { @include text-shadowed; }
+		}
+		// Borders
+		@if get-theme-styles-without-borders() == false {
+			@include declare-themed-style( $class-bordered,     $has-inverse: true, $has-secondary: true, $with-when-hovered: true, $with-when-active: true ) { @include bordered; }
+			// @ include declare-themed-style( $class-t-bordered,   $has-inverse: true, $has-secondary: true                                                    ) { @include t-bordered; }
+			// @ include declare-themed-style( $class-r-bordered,   $has-inverse: true, $has-secondary: true, $with-when-hovered: true                          ) { @include r-bordered; }
+			// @ include declare-themed-style( $class-b-bordered,   $has-inverse: true, $has-secondary: true                                                    ) { @include b-bordered; }
+			// @ include declare-themed-style( $class-l-bordered,   $has-inverse: true, $has-secondary: true, $with-when-hovered: true                          ) { @include l-bordered; }
+			// @ include declare-themed-style( $class-lr-bordered,  $has-inverse: true, $has-secondary: true                                                    ) { @include lr-bordered; }
+			// @ include declare-themed-style( $class-tb-bordered,  $has-inverse: true, $has-secondary: true                                                    ) { @include tb-bordered; }
+			// @ include declare-themed-style( $class-ltr-bordered, $has-inverse: true, $has-secondary: true                                                    ) { @include ltr-bordered; }
+			// @ include declare-themed-style( $class-lbr-bordered, $has-inverse: true, $has-secondary: true                                                    ) { @include lbr-bordered; }
+			// @ include declare-themed-style( $class-spinner,      $has-inverse: true, $has-secondary: true                                                    ) { @include spinner; }
+		}
+		// Inputs
+		@if get-theme-styles-without-inputs() == false {
+			// @ include declare-themed-style( $class-text-input, $has-inverse: true, $has-secondary: true ) { @include text-input; }
+			@include declare-themed-style( $class-select,     $has-inverse: true, $has-secondary: true ) { @include select; }
+		}
+		// Buttons
+		@if get-theme-styles-without-buttons() == false {
+			@include declare-themed-style( $class-button,             $has-inverse: true, $has-secondary: true                                                    ) { @include button; }
+			@include declare-themed-style( $class-shallow-button,     $has-inverse: true, $has-secondary: true                                                    ) { @include shallow-button; }
+			@include declare-themed-style( $class-flat-button,        $has-inverse: true, $has-secondary: true                                                    ) { @include flat-button; }
+			@include declare-themed-style( $class-hybrid-button,      $has-inverse: true, $has-secondary: true                                                    ) { @include hybrid-button; }
+			@include declare-themed-style( $class-button-shading,     $has-inverse: true, $has-secondary: true, $with-when-hovered: true                          ) { @include button-shading; }
+		}
+		// Coloring
+		@if get-theme-styles-without-coloring() == false {
+			@include declare-themed-style( $class-text-coloring,      $has-inverse: true, $has-secondary: true, $with-when-hovered: true, $with-when-active: true ) { @include text-coloring; }
+			@include declare-themed-style( $class-coloring,           $has-inverse: true, $has-secondary: true, $with-when-hovered: true, $with-when-active: true ) { @include coloring; }
+			@include declare-themed-style( $class-sheer,              $has-inverse: true, $has-secondary: true, $with-when-hovered: true                          ) { @include sheer; }
+		}
+		// Base
+		@if get-theme-styles-without-base() == false {
+			@include declare-themed-style( $class-appearance-none ) { @include appearance-none; }
+			@include declare-themed-style( $class-hardware-render ) { @include hardware-render; }
+			@include declare-themed-style( $class-transitions     ) { @include transitions; }
+			@include declare-themed-style( $class-no-transitions  ) { @include no-transitions; }
+			//////////////////////// INTERACTIVITY
+			@include declare-themed-style( $class-not-selectable ) { @include not-selectable; }
+			@include declare-themed-style( $class-selectable     ) { @include selectable; }
+			@include declare-themed-style( $class-hoverable      ) { @include hoverable; }
+			@include declare-themed-style( $class-loaded         ) { @include loaded; }
+			@for $hoverable-id from 1 through 3 {
+				@include declare-themed-style( get-hoverable-class-name( $hoverable-id: $hoverable-id ) ) { @include hoverable( $hoverable-id: $hoverable-id ); }
+			}
+			//////////////////////// BLOCKS
+			@include declare-themed-style( $class-gone, $with-when-mobile: true                                                                    ) { @include gone; }
+			@include declare-themed-style( $class-invisible                                                                                        ) { @include invisible; }
+			@include declare-themed-style( $class-transparent,        $with-when-hovered: true, $with-when-active: true                            ) { @include transparent; }
+			@include declare-themed-style( $class-mostly-transparent, $with-when-hovered: true                                                     ) { @include mostly-transparent; }
+			@include declare-themed-style( $class-barely-transparent, $with-when-hovered: true                                                     ) { @include barely-transparent; }
+			@include declare-themed-style( $class-opaque,             $with-when-hovered: true, $with-when-active: true, $with-when-touching: true, $with-when-mobile: true ) { @include opaque; }
+			@include declare-themed-style( "target-opaque",           $with-when-hovered: true                                                     ) { @include target-opaque(); }
+			@for $target-id from 1 through 1 {
+				@include declare-themed-style( "target-#{ $target-id }-opaque", $with-when-hovered: true ) { @include target-opaque( $target-id: $target-id ); }
+			}
+			@include declare-themed-style( $class-mostly-opaque,      $with-when-hovered: true                          ) { @include mostly-opaque; }
+			@include declare-themed-style( $class-barely-opaque,      $with-when-hovered: true                          ) { @include barely-opaque; }
+			@include declare-themed-style( $class-shaded,             $with-when-hovered: true                          ) { @include shaded; }
+			@include declare-themed-style( $class-tinted,             $with-when-hovered: true                          ) { @include tinted; }
+			@include declare-themed-style( $class-inline                                                                ) { @include inline; }
+			@include declare-themed-style( $class-inline-block                                                          ) { @include inline-block; }
+			@include declare-themed-style( $class-block, $with-when-mobile: true                                        ) { @include block; }
+			@include declare-themed-style( $class-clearfix                                                              ) { @include clearfix; }
+			@include declare-themed-style( $class-no-overflow                                                           ) { @include no-overflow; }
+			@include declare-themed-style( $class-show-overflow                                                         ) { @include show-overflow; }
+			@include declare-themed-style( $class-overflow-scroll                                                       ) { @include overflow-scroll; }
+			@include declare-themed-style( $class-overflow-ellipsis                                                     ) { @include overflow-ellipsis; }
+			// Block floating
+			@include declare-themed-style( $class-left        , $with-when-mobile: true ) { @include left; }
+			@include declare-themed-style( $class-right       , $with-when-mobile: true ) { @include right; }
+			@include declare-themed-style( $class-clear-left  ) { @include clear-left; }
+			@include declare-themed-style( $class-clear-right ) { @include clear-right; }
+			@include declare-themed-style( $class-clear       ) { @include clear; }
+			//////////////////////// TEXT
+			@include declare-themed-style( $class-link          ) { @include link; }
+			@include declare-themed-style( $class-normal-cursor ) { @include normal-cursor; }
+			// Fonts
+			@include declare-themed-style( $class-sans-serif ) { @include sans-serif; }
+			@include declare-themed-style( $class-serif      ) { @include serif; }
+			// Text Alignment
+			@include declare-themed-style( $class-text-left                            ) { @include text-left; }
+			@include declare-themed-style( $class-text-right                           ) { @include text-right; }
+			@include declare-themed-style( $class-text-center, $with-when-mobile: true ) { @include text-center; }
+			@include declare-themed-style( $class-text-justify                         ) { @include text-justify; }
+			@include declare-themed-style( $class-uppercase                            ) { @include uppercase; }
+			@include declare-themed-style( $class-lowercase                            ) { @include lowercase; }
+			@include declare-themed-style( $class-small-caps                           ) { @include small-caps; }
+			@include declare-themed-style( $class-capitalize                           ) { @include capitalize; }
+			@include declare-themed-style( $class-nowrap                               ) { @include nowrap; }
+			@include declare-themed-style( $class-wrap                                 ) { @include wrap; }
+			@include declare-themed-style( $class-small                                ) { @include small; }
+			@include declare-themed-style( $class-very-small                           ) { @include very-small; }
+			@include declare-themed-style( $class-light                                ) { @include light; }
+			@include declare-themed-style( $class-normal                               ) { @include normal; }
+			@include declare-themed-style( $class-b                                    ) { @include b; }
+			@include declare-themed-style( $class-b-alt                                ) { @include b; }
+			@include declare-themed-style( $class-em                                   ) { @include em; }
+			// @ include declare-themed-style( $class-i              ) { @include em; }
+			@include declare-themed-style( $class-u              ) { @include u; }
+			@include declare-themed-style( $class-less-wide      ) { @include less-wide; }
+			@include declare-themed-style( $class-wide           ) { @include wide; }
+			@include declare-themed-style( $class-very-wide      ) { @include very-wide; }
+			@include declare-themed-style( $class-extra-wide     ) { @include extra-wide; }
+			@include declare-themed-style( $class-hanging-indent ) { @include hanging-indent; }
+			//////////////////////// TABLES
+			@include declare-themed-style( $class-table                               ) { @include table; }
+			@include declare-themed-style( $class-table-row                           ) { @include table-row ; }
+			@include declare-themed-style( $class-table-cell, $with-when-mobile: true ) { @include table-cell; }
+			@include declare-themed-style( $class-valign-baseline                     ) { @include valign-baseline; }
+			@include declare-themed-style( $class-valign-center                       ) { @include valign-center; }
+			@include declare-themed-style( $class-valign-bottom                       ) { @include valign-bottom; }
+			@include declare-themed-style( $class-valign-top                          ) { @include valign-top; }
+			//////////////////////// POSITIONING
+			@include declare-themed-style( $class-relative                                ) { @include relative; }
+			@include declare-themed-style( $class-absolute                                ) { @include absolute; }
+			@include declare-themed-style( $class-fixed                                   ) { @include fixed; }
+			@include declare-themed-style( $class-above,         $with-when-hovered: true ) { @include above; }
+			@include declare-themed-style( $class-way-above,     $with-when-hovered: true ) { @include way-above; }
+			@include declare-themed-style( $class-way-way-above, $with-when-hovered: true ) { @include way-way-above; }
+			@include declare-themed-style( $class-below                                   ) { @include below; }
+			@include declare-themed-style( $class-top                                     ) { @include top; }
+			@include declare-themed-style( $class-bottom                                  ) { @include bottom; }
+			@include declare-themed-style( $class-tl                                      ) { @include tl; }
+			@include declare-themed-style( $class-tr                                      ) { @include tr; }
+			@include declare-themed-style( $class-br                                      ) { @include br; }
+			@include declare-themed-style( $class-bl                                      ) { @include bl; }
+			// Sizing
+			@include declare-themed-style( $class-whole-height                                                   ) { @include whole-height; }
+			@include declare-themed-style( $class-whole-max-width                                                ) { @include whole-max-width; }
+			@include declare-themed-style( $class-whole-max-height                                               ) { @include whole-max-height; }
+			@include declare-themed-style( $class-whole-min-width                                                ) { @include whole-min-width; }
+			@include declare-themed-style( $class-whole-min-height                                               ) { @include whole-min-height; }
+			@each $property in $ratio-properties {
+				@for $denominator from nth( $ratio-denominator-range, 1 ) through nth( $ratio-denominator-range, 2 ) {
+					@for $numerator from 1 to $denominator {
+						@include declare-themed-style( get-ratio-class-name( $property: $property, $numerator: $numerator, $denominator: $denominator ), $with-when-mobile: true ) { @include ratio( $property, $numerator, $denominator ); }
+					}
+				}
+			}
+			@include declare-themed-style( $class-whole-width, $with-when-hovered: true, $with-when-mobile: true ) { @include whole-width; }
+			@include declare-themed-style( $class-no-background ) { @include no-background; }
+			@include declare-themed-style( $class-no-max-height ) { @include no-max-height; }
+			@include declare-themed-style( $class-no-max-width  ) { @include no-max-width; }
+
+			@include declare-themed-style( $class-reasonable-max-height ) { @include reasonable-max-height; }
+			@include declare-themed-style( $class-reasonable-max-width  ) { @include reasonable-max-width; }
+			@include declare-themed-style( $class-reasonable-min-width  ) { @include reasonable-min-width; }
+
+			@include declare-themed-style( $class-target-reasonable-max-height, $with-when-hovered: true ) { @include target-reasonable-max-height; }
+			@include declare-themed-style( $class-target-reasonable-max-width , $with-when-hovered: true ) { @include target-reasonable-max-width; }
+			@include declare-themed-style( $class-target-above                , $with-when-hovered: true, $with-when-active: true ) { @include target-above; }
+			@include declare-themed-style( $class-target-opaque               , $with-when-hovered: true, $with-when-active: true ) { @include target-opaque; }
+
+			@include declare-themed-style( $class-whole-rounded                                                                                ) { @include whole-rounded; }
+			@include declare-themed-style( $class-no-rounding,        $with-when-hovered: true, $with-when-active: true                        ) { @include no-rounding; }
+			@include declare-themed-style( $class-border-box                                                                                   ) { @include border-box; }
+			@include declare-themed-style( $class-no-border,          $with-when-hovered: true, $with-when-active: true, $with-when-last: true ) { @include no-border; }
+			@include declare-themed-style( $class-transparent-border, $with-when-hovered: true, $with-when-active: true                        ) { @include transparent-border; }
+			// Padding
+			@include declare-themed-style( $class-no-padding, $with-when-first: true, $with-when-last: true, $with-when-mobile: true ) { @include no-padding; }
+			// Margins
+			@include declare-themed-style( $class-no-margin, $with-when-first: true, $with-when-last: true, $with-when-mobile: true ) { @include no-margin; }
+			@include declare-themed-style( $class-lr-auto-margin                                                                    ) { @include lr-auto-margin; }
+		}
+	}
+}
+
+@mixin actually-declare-theme(
+	$theme                   : $current-theme,
+	$is-themeless            : $current-is-themeless,
+	$with-themed-style       : $current-with-themed-style,
+	$with-theme-when-hovered : $current-with-theme-when-hovered,
+	$with-theme-when-active  : $current-with-theme-when-active, 
+	$with-theme-when-touching: $current-with-theme-when-touching, 
+	$with-theme-when-retina  : $current-with-theme-when-retina, 
+	$with-theme-when-mobile  : $current-with-theme-when-mobile, 
+	$with-theme-when-first   : $current-with-theme-when-first, 
+	$with-theme-when-last    : $current-with-theme-when-last, 
+	$with-theme-when-ff      : $current-with-theme-when-ff,
+	$with-theme-when-ie      : $current-with-theme-when-ie
+) {
+	@if $is-themeless {
+		@content;
+	}
+	@else {
+		$theme-name              : get-theme-name(               $theme      );
+		$theme-name-when-hovered : get-when-hovered-class-name(  $theme-name );
+		$theme-name-when-active  : get-when-active-class-name(   $theme-name );
+		$theme-name-when-touching: get-when-touching-class-name( $theme-name );
+		$theme-name-when-retina  : get-when-retina-class-name(   $theme-name );
+		$theme-name-when-mobile  : get-when-mobile-class-name(   $theme-name );
+		$theme-name-when-first   : get-when-first-class-name(    $theme-name );
+		$theme-name-when-last    : get-when-last-class-name(     $theme-name );
+		$theme-name-when-ff      : get-when-ff-class-name(       $theme-name );
+		$theme-name-when-ie      : get-when-ie-class-name(       $theme-name );
+
+		$theme-selector: get-theme-selector( $theme: $theme );
+
+		                                 #{ $theme-selector           } {                          @content   }
+		@if $with-theme-when-hovered  { .#{ $theme-name-when-hovered  } { @include when-hovered  { @content } } }
+		@if $with-theme-when-active   { .#{ $theme-name-when-active   } { @include when-active   { @content } } }
+		@if $with-theme-when-touching { .#{ $theme-name-when-touching } { @include when-touching { @content } } }
+		@if $with-theme-when-retina   { .#{ $theme-name-when-retina   } { @include when-retina   { @content } } }
+		@if $with-theme-when-mobile   { .#{ $theme-name-when-mobile   } { @include when-mobile   { @content } } }
+		@if $with-theme-when-first    { .#{ $theme-name-when-first    } { @include when-first    { @content } } }
+		@if $with-theme-when-last     { .#{ $theme-name-when-last     } { @include when-last     { @content } } }
+		@if $with-theme-when-ff       { .#{ $theme-name-when-ff       } { @include when-ff       { @content } } }
+		@if $with-theme-when-ie       { .#{ $theme-name-when-ie       } { @include when-ie       { @content } } }
+	}
+}

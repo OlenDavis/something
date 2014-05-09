@@ -1,0 +1,60 @@
+
+@mixin spin {
+	&, &[class^="icon-"]:before, &[class*=" icon-"]:before {
+		@include my-animation( $name: $class-spin, $timing-function: linear, $iteration-count: infinite, $duration: 2s );
+	}
+}
+
+@mixin fade-out {
+	@include my-animation( $name: $class-fade-out, $duration: $default-animation-duration );
+
+	&.#{ $class-very-slowly } {
+		@include my-animation( $name: $class-fade-out, $duration: $default-animation-duration * 10 );
+	}
+}
+
+@mixin fade-in {
+	@include my-animation( $name: $class-fade-in, $duration: $default-animation-duration );
+
+	&.#{ $class-very-slowly } {
+		@include my-animation( $name: $class-fade-in, $duration: $default-animation-duration * 10 );
+	}
+}
+
+@mixin rotated-back {
+	@include create-transform( $rotate-x: -60deg, $origin-y: $default-origin-y, $perspective: $default-perspective );
+}
+
+@mixin rotated-forward {
+	@include create-transform( $rotate-x: 0deg, $origin-y: $default-origin-y, $perspective: $default-perspective );
+}
+
+@mixin fade-in-rotate-forward {
+	@include my-animation( $name: $class-fade-in-rotate-forward );
+
+	&.#{ $class-slow } {
+		@include my-animation( $name: $class-fade-in-rotate-forward, $duration: $default-animation-duration * 2 );
+	}
+}
+
+@mixin fade-out-rotate-back {
+	@include my-animation( $name: $class-fade-out-rotate-back );
+
+	&.#{ $class-slow } {
+		@include my-animation( $name: $class-fade-out-rotate-back, $duration: $default-animation-duration * 2 );
+	}
+}
+
+@mixin scale-in {
+	@include my-animation( $name: $class-scale-in, $duration: $default-animation-duration );
+
+	&.#{ $class-very-slowly } {
+		@include my-animation( $name: $class-scale-in, $duration: $default-animation-duration * 10 );
+	}
+}
+
+@mixin pulse {
+	&, &[class^="icon-"]:before, &[class*=" icon-"]:before {
+		@include my-animation( $name: $class-pulse, $timing-function: ease, $iteration-count: infinite, $duration: 5s, $delay: 4s );
+	}
+}

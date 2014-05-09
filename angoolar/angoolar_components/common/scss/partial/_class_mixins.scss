@@ -1,0 +1,1545 @@
+//////////////////////// TEXT STYLES
+@function get-line-height-matching-class-name( $property ) {
+	@return "#{ $class-line-height-matching }-#{ $property }";
+}
+
+@mixin line-height-matching-property( $property, $lines, $font-size ) {
+	$line-height-matching-class-name: get-line-height-matching-class-name( $property );
+	.#{ $line-height-matching-class-name }, &.#{ $line-height-matching-class-name } {
+		@if $lines == true {
+			#{ $property }: rhythm( $lines: lines-for-font-size( $font-size ), $font-size: $font-size );
+		}
+		@else if $lines == false {
+			#{ $property }: 1em;
+		}
+		@else {
+			#{ $property }: rhythm( $lines: $lines, $font-size: $font-size );
+		}
+	}
+}
+
+@mixin text-styles( $text-styles ) {
+	$font-family                    : get-text-font-family(                     $text-styles );
+	$color                          : get-text-color(                           $text-styles );
+	$font-size                      : get-text-font-size(                       $text-styles );
+	$lines                          : get-text-lines(                           $text-styles );
+	$leader                         : get-text-leader(                          $text-styles );
+	$leader-property                : get-text-leader-property(                 $text-styles );
+	$trailer                        : get-text-trailer(                         $text-styles );
+	$trailer-property               : get-text-trailer-property(                $text-styles );
+	$line-height-matching-properties: get-text-line-height-matching-properties( $text-styles );
+
+	@if $font-family != false {
+		font-family: $font-family;
+	}
+	@if $color != false {
+		color: $color;
+	}
+
+	@if $font-size != false {
+		font-size: $font-size / $base-font-size * 1em;
+		@if $lines == true {
+			line-height: rhythm( $lines: lines-for-font-size( $font-size ), $font-size: $font-size );
+		}
+		@else if $lines == false {
+			line-height: 1em;
+		}
+		@else {
+			line-height: rhythm( $lines: $lines, $font-size: $font-size );
+		}
+	}
+
+	@if $leader != false {
+		@if $leader-property != false {
+			@include leader( $lines: $leader, $property: $leader-property );
+		}
+		@else {
+			@include leader( $lines: $leader );
+		}
+	}
+
+	@if $trailer != false {
+		@if $trailer-property != false {
+			@include trailer( $lines: $trailer, $property: $trailer-property );
+		}
+		@else {
+			@include trailer( $lines: $trailer );
+		}
+	}
+
+	@if $line-height-matching-properties != false {
+		@each $line-height-matching-property in $line-height-matching-properties {
+			@include line-height-matching-property( $property: $line-height-matching-property, $lines: $lines, $font-size: $font-size );
+		}
+	}
+}
+
+//////////////////////// INTERACTIVITY
+@mixin not-selectable {
+	-webkit-touch-callout: none;
+	-webkit-user-select  : none;
+	-khtml-user-select   : none;
+	-moz-user-select     : none;
+	-ms-user-select      : none;
+	user-select          : none;
+}
+
+@mixin selectable {
+	-webkit-touch-callout: default;
+	-webkit-user-select  : text;
+	-khtml-user-select   : text;
+	-moz-user-select     : text;
+	-ms-user-select      : text;
+	user-select          : text;
+}
+
+@mixin hoverable( $hoverable-id: false ) {
+	$actual-hovered-class    : if( $hoverable-id == false, $class-hovered,     #{ $class-hovered     }-#{ $hoverable-id } );
+	$actual-not-hovered-class: if( $hoverable-id == false, $class-not-hovered, #{ $class-not-hovered }-#{ $hoverable-id } );
+
+	.#{ $actual-hovered-class }, .#{ $actual-not-hovered-class } {
+		@include transitions;
+	}
+	.#{ $actual-hovered-class } {
+		@include transparent;
+	}
+	@include when-hovered {
+		.#{ $actual-hovered-class } {
+			@include opaque;
+		}
+		.#{ $actual-not-hovered-class } {
+			@include transparent;
+		}
+	}
+}
+
+@mixin target-opaque( $target-id: false ) {
+	$actual-target-class: if( $target-id == false, $class-target, #{ $class-target }-#{ $target-id } );
+
+	.#{ $actual-target-class } {
+		@include opaque;
+	}
+}
+
+@mixin loaded {
+	@include transitions;
+	&.#{ $class-not } {
+		@include transparent;
+	}
+	@include opaque;
+}
+
+//////////////////////// BLOCKS
+@mixin transparent {
+	@include opacity( 0 );
+}
+
+@mixin mostly-transparent {
+	@include opacity( $default-mostly );
+}
+
+@mixin barely-transparent {
+	@include opacity( $default-barely );
+}
+
+@mixin opaque {
+	@include opacity( 1 );
+}
+
+@mixin target-opaque( $target-id: false  ) {
+	$actual-target-class: get-target-class-name( $target-id );
+	.#{ $actual-target-class } {
+		@include opaque;
+	}
+}
+
+@mixin mostly-opaque {
+	@include opacity( 1 - $default-mostly );
+}
+
+@mixin barely-opaque {
+	@include opacity( 1 - $default-barely );
+}
+
+@mixin shaded {
+	background-color: rgba( black, 1 - $default-barely );
+}
+
+@mixin tinted {
+	background-color: rgba( white, 1 - $default-barely );
+}
+
+@mixin gone {
+	display: none;
+}
+
+@mixin invisible {
+	visibility: hidden;
+}
+
+@mixin inline {
+	display: inline;
+}
+
+@mixin block {
+	display: block;
+}
+
+@mixin no-overflow {
+	overflow: hidden;
+}
+@mixin show-overflow {
+	overflow: visible;
+}
+@mixin overflow-scroll {
+	overflow: auto;
+	-webkit-overflow-scrolling: touch;
+}
+@mixin overflow-ellipsis {
+	@include no-overflow();
+	text-overflow: ellipsis;
+}
+
+// Block floating
+@mixin left {
+	float: left;
+}
+@mixin right {
+	float: right;
+}
+
+@mixin clear-left {
+	clear: left;
+}
+@mixin clear-right {
+	clear: right;
+}
+@mixin clear {
+	clear: both;
+}
+
+//////////////////////// TEXT
+@mixin link {
+	&, * {
+		text-decoration: none;
+		cursor: pointer;
+		@include when-disabled {
+			@include normal-cursor;
+		}
+	}
+}
+@mixin normal-cursor {
+	cursor: default;
+}
+
+// Fonts
+@mixin sans-serif {
+	font-family: $sans-serif-font-family;
+}
+
+@mixin serif {
+	font-family: $sans-serif-font-family;
+}
+
+// Text Alignment
+@mixin text-left {
+	text-align: left;
+}
+@mixin text-right {
+	text-align: right;
+}
+@mixin text-center {
+	text-align: center;
+}
+@mixin text-justify {
+	text-align: justify;
+}
+
+@mixin uppercase {
+	text-transform: uppercase;
+}
+
+@mixin lowercase {
+	text-transform: lowercase;
+}
+
+@mixin small-caps {
+	font-variant: small-caps;
+}
+
+@mixin capitalize {
+	text-transform: capitalize;
+}
+
+@mixin nowrap {
+	white-space: nowrap;
+}
+
+@mixin wrap {
+	white-space: normal;
+}
+
+@mixin small {
+	font-size: $small;
+	// line-height: $small;
+}
+
+@mixin very-small {
+	font-size: $very-small;
+	// line-height: $very-small;
+}
+
+@mixin light {
+	font-weight: 300;
+}
+
+@mixin normal {
+	font-weight: normal;
+}
+
+@mixin b {
+	&, & td, & .#{ $class-table-cell }, &:before, &:after {
+		font-weight: bold;
+	}
+}
+
+@mixin em {
+	&, & td, & .#{ $class-table-cell }, &:before, &:after {
+		font-style: italic;
+	}
+}
+
+@mixin i {
+	@include em();
+}
+
+@mixin u {
+	&, & td, & .#{ $class-table-cell }, &:before, &:after {
+		text-decoration: underline;
+	}
+}
+
+@mixin less-wide {
+	letter-spacing: .2em;
+}
+
+@mixin wide {
+	letter-spacing: .33em;
+}
+
+@mixin very-wide {
+	letter-spacing: .5em;
+}
+
+@mixin extra-wide {
+	letter-spacing: 1em;
+}
+
+$hanging-indent: 2.6em;
+@mixin hanging-indent {
+	@include block;
+	padding-left: $hanging-indent;
+	text-indent: -$hanging-indent;
+}
+
+//////////////////////// TABLES
+@mixin table {
+	display        : table;
+	border-collapse: collapse;
+	border-spacing : 0em;
+
+	&.#{ $class-fixed-layout } {
+		table-layout: fixed;
+	}
+	&.#{ $class-auto-layout } {
+		table-layout: auto;
+	}
+}
+
+@mixin table-row {
+	display: table-row;
+}
+
+@mixin table-cell {
+	display: table-cell;
+}
+
+@mixin valign-baseline {
+	vertical-align: baseline;
+}
+@mixin valign-center {
+	vertical-align: middle;
+}
+@mixin valign-bottom {
+	vertical-align: bottom;
+}
+@mixin valign-top {
+	vertical-align: top;
+}
+
+@mixin table-padded( $theme: $current-theme ) {
+	@if has-spacing() {
+		border-collapse: separate;
+		border-spacing: get-standard-padding( $theme: $theme );
+		&.#{ $class-less } {
+			border-spacing: get-less-padding( $theme: $theme );
+		}
+		&.#{ $class-more } {
+			border-spacing: get-more-padding( $theme: $theme );
+		}
+	}
+}
+
+//////////////////////// POSITIONING
+@mixin relative {
+	position: relative;
+}
+@mixin absolute {
+	position: absolute;
+}
+@mixin fixed {
+	position: fixed;
+}
+
+@mixin above {
+	z-index: 99;
+}
+
+@mixin way-above {
+	z-index: 999;
+}
+
+@mixin way-way-above {
+	z-index: 9999;
+}
+
+@mixin target-above( $target-id: false  ) {
+	$actual-target-class: get-target-class-name( $target-id );
+	.#{ $actual-target-class } {
+		@include above;
+	}
+}
+
+@mixin target-way-above( $target-id: false  ) {
+	$actual-target-class: get-target-class-name( $target-id );
+	.#{ $actual-target-class } {
+		@include way-above;
+	}
+}
+
+@mixin target-way-way-above( $target-id: false  ) {
+	$actual-target-class: get-target-class-name( $target-id );
+	.#{ $actual-target-class } {
+		@include way-way-above;
+	}
+}
+
+@mixin below {
+	z-index: -1;
+}
+
+@mixin top    { top:    0px; }
+@mixin bottom { bottom: 0px; }
+
+@mixin tl { top:    0px; left:  0px; }
+@mixin tr { top:    0px; right: 0px; }
+@mixin br { bottom: 0px; right: 0px; }
+@mixin bl { bottom: 0px; left:  0px; }
+
+//////////////////////// CONTENT STYLING
+@mixin appearance-none {
+	@include appearance( none );
+}
+
+@mixin hardware-render {
+	@include translate( 0, 0, 0 );
+}
+
+@mixin transitions {
+	@include transition-property( all );
+	@include transition-duration( $default-transition-duration );
+
+	&.#{ $class-fast } {
+		@include transition-duration( $default-transition-duration / 2 );
+	}
+	&.#{ $class-slow } {
+		@include transition-duration( $default-transition-duration * 4 );
+	}
+}
+
+@mixin no-transitions {
+	@include transition-property( none !important );
+	@include transition-duration( 0s !important );
+}
+
+//////////////////////// SIZING
+@mixin whole-width {
+	width: 100%;
+	// &.underestimated { 
+	// 	width: 100% - $default-underestimation;
+	// }
+}
+@mixin whole-height {
+	height: 100%;
+	// &.underestimated { 
+	// 	height: 100% - $default-underestimation;
+	// }
+}
+@mixin whole-max-width {
+	max-width: 100%;
+	// &.underestimated { 
+	// 	max-width: 100% - $default-underestimation;
+	// }
+}
+@mixin whole-max-height {
+	max-height: 100%;
+	// &.underestimated { 
+	// 	max-height: 100% - $default-underestimation;
+	// }
+}
+@mixin whole-min-width {
+	min-width: 100%;
+	// &.underestimated { 
+	// 	min-width: 100% - $default-underestimation;
+	// }
+}
+@mixin whole-min-height {
+	min-height: 100%;
+	// &.underestimated { 
+	// 	min-height: 100% - $default-underestimation;
+	// }
+}
+
+@function get-ratio-class-name( $property, $numerator, $denominator ) {
+	@return "#{ $property }-#{ $class-ratio }-#{ $numerator }-#{ $denominator }";
+}
+
+@mixin ratio( $property, $numerator, $denominator, $underestimation: $default-underestimation ) {
+	#{ $property }: $numerator / $denominator * 100%;
+	// &.underestimated { 
+	// 	#{ $property }: $numerator / $denominator * 100% - $underestimation;
+	// }
+}
+
+@mixin no-background {
+	background: none !important;
+}
+
+@mixin no-max-height {
+	max-height: 0em;
+}
+
+@mixin no-max-width {
+	max-width: 0em;
+}
+
+@mixin reasonable-min-height {
+	min-height: $reasonable;
+}
+@mixin reasonable-max-height {
+	max-height: $reasonable;
+}
+@mixin reasonable-min-width {
+	min-width: $reasonable;
+}
+@mixin reasonable-max-width {
+	max-width: $reasonable;
+}
+
+@mixin target-reasonable-max-height( $target-id: false  ) {
+	$actual-target-class: get-target-class-name( $target-id );
+	.#{ $actual-target-class } {
+		@include reasonable-max-height;
+	}
+}
+
+@mixin target-reasonable-max-width( $target-id: false  ) {
+	$actual-target-class: get-target-class-name( $target-id );
+	.#{ $actual-target-class } {
+		@include reasonable-max-width;
+	}
+}
+
+@mixin target-above( $target-id: false  ) {
+	$actual-target-class: get-target-class-name( $target-id );
+	.#{ $actual-target-class } {
+		@include above;
+	}
+}
+
+@mixin border-box {
+	@include box-sizing( border-box );
+}
+
+@mixin no-border {
+	border-width: 0px !important;
+	// border-top   : 0px solid transparent;
+	// border-right : 0px solid transparent;
+	// border-bottom: 0px solid transparent;
+	// border-left  : 0px solid transparent;
+}
+
+@mixin transparent-border {
+	border-color: transparent;
+}
+
+@mixin no-padding {
+	padding: 0px !important;
+	// padding-top   : 0px;
+	// padding-right : 0px;
+	// padding-bottom: 0px;
+	// padding-left  : 0px;
+}
+
+@mixin no-margin {
+	margin: 0px !important;
+	// margin-top   : 0px;
+	// margin-right : 0px;
+	// margin-bottom: 0px;
+	// margin-left  : 0px;
+}
+@mixin lr-auto-margin {
+	margin-left: auto;
+	margin-right: auto;
+}
+
+@mixin whole-rounded {
+	@include border-radius( 100% );
+}
+
+@mixin no-rounding {
+	@include border-radius( 0% );
+}
+
+////////////////////////////////////////////
+//////////////////////// PLAIN-THEMED MIXINS
+////////////////////////////////////////////
+
+//////////////////////// ROUNDED BORDERS
+@mixin rounded( $theme: $current-theme ) {
+	@if has-border() {
+		@include border-radius( get-border-radius( $theme: $theme ) );
+	}
+}
+
+@mixin t-rounded( $theme: $current-theme ) {
+	@if has-border() {
+		@include border-top-radius( get-border-radius( $theme: $theme ) );
+	}
+}
+
+@mixin r-rounded( $theme: $current-theme ) {
+	@if has-border() {
+		@include border-right-radius( get-border-radius( $theme: $theme ) );
+	}
+}
+
+@mixin b-rounded( $theme: $current-theme ) {
+	@if has-border() {
+		@include border-bottom-radius( get-border-radius( $theme: $theme ) );
+	}
+}
+
+@mixin l-rounded( $theme: $current-theme ) {
+	@if has-border() {
+		@include border-left-radius( get-border-radius( $theme: $theme ) );
+	}
+}
+
+@mixin tl-rounded( $theme: $current-theme ) {
+	@if has-border() {
+		@include border-top-left-radius( get-border-radius( $theme: $theme ) );
+	}
+}
+
+@mixin tr-rounded( $theme: $current-theme ) {
+	@if has-border() {
+		@include border-top-right-radius( get-border-radius( $theme: $theme ) );
+	}
+}
+
+@mixin bl-rounded( $theme: $current-theme ) {
+	@if has-border() {
+		@include border-bottom-left-radius( get-border-radius( $theme: $theme ) );
+	}
+}
+
+@mixin br-rounded( $theme: $current-theme ) {
+	@if has-border() {
+		@include border-bottom-right-radius( get-border-radius( $theme: $theme ) );
+	}
+}
+
+//////////////////////// PADDING/MARGIN
+@mixin spacing( $spacing-property, $spacing, $with-before ) {
+	@if $with-before {
+		&, &:before {
+			#{ $spacing-property }: $spacing;
+			&.#{ $class-negative } { #{ $spacing-property }: $spacing * -1; }
+		}
+	}
+	@else {
+		#{ $spacing-property }: $spacing;
+		&.#{ $class-negative } { #{ $spacing-property }: $spacing * -1; }
+	}
+}
+@mixin padding-base( $theme: $current-theme, $padded-properties: (), $with-before: false ) {
+	@if has-spacing() {
+		@each $padded-property in $padded-properties {
+
+			@include spacing( $padded-property, get-standard-padding( $theme: $theme ), $with-before );
+
+			&.#{ $class-less } {
+				@include spacing( $padded-property, get-less-padding( $theme: $theme ), $with-before );
+			}
+			&.#{ $class-more } {
+				@include spacing( $padded-property, get-more-padding( $theme: $theme ), $with-before );
+			}
+			&.#{ $class-way-more } {
+				@include spacing( $padded-property, get-way-more-padding( $theme: $theme ), $with-before );
+			}
+		}
+	}	
+}
+@mixin margin-base( $theme: $current-theme, $margin-properties: (), $with-before: false ) {
+	@if has-spacing() {
+		@each $margin-property in $margin-properties {
+
+			@include spacing( $margin-property, get-standard-margin( $theme: $theme ), $with-before );
+
+			&.#{ $class-less } {
+				@include spacing( $margin-property, get-less-margin( $theme: $theme ), $with-before );
+			}
+			&.#{ $class-more } {
+				@include spacing( $margin-property, get-more-margin( $theme: $theme ), $with-before );
+			}
+			&.#{ $class-way-more } {
+				@include spacing( $margin-property, get-way-more-margin( $theme: $theme ), $with-before );
+			}
+		}
+	}	
+}
+
+@mixin padded( $theme: $current-theme ) {
+	@include padding-base( $theme: $theme, $padded-properties: ( padding ), $with-before: true );
+}
+@mixin t-padded( $theme: $current-theme ) { 
+	@include padding-base( $theme: $theme, $padded-properties: ( padding-top ) );
+}
+@mixin r-padded( $theme: $current-theme ) { 
+	@include padding-base( $theme: $theme, $padded-properties: ( padding-right ) );
+}
+@mixin b-padded( $theme: $current-theme ) { 
+	@include padding-base( $theme: $theme, $padded-properties: ( padding-bottom ) );
+}
+@mixin l-padded( $theme: $current-theme ) { 
+	@include padding-base( $theme: $theme, $padded-properties: ( padding-left ) );
+}
+@mixin lr-padded( $theme: $current-theme ) {
+	@include padding-base( $theme: $theme, $padded-properties: ( padding-left, padding-right ) );
+}
+@mixin tb-padded( $theme: $current-theme ) {
+	@include padding-base( $theme: $theme, $padded-properties: ( padding-top, padding-bottom ) );
+}
+
+@mixin margin( $theme: $current-theme ) {
+	@include margin-base( $theme: $theme, $margin-properties: ( margin ), $with-before: true );
+}
+@mixin t-margin( $theme: $current-theme ) { 
+	@include margin-base( $theme: $theme, $margin-properties: ( margin-top ) );
+}
+@mixin r-margin( $theme: $current-theme ) { 
+	@include margin-base( $theme: $theme, $margin-properties: ( margin-right ) );
+}
+@mixin b-margin( $theme: $current-theme ) { 
+	@include margin-base( $theme: $theme, $margin-properties: ( margin-bottom ) );
+}
+@mixin l-margin( $theme: $current-theme ) { 
+	@include margin-base( $theme: $theme, $margin-properties: ( margin-left ) );
+}
+@mixin lr-margin( $theme: $current-theme ) {
+	@include margin-base( $theme: $theme, $margin-properties: ( margin-left, margin-right ) );
+}
+@mixin tb-margin( $theme: $current-theme ) {
+	@include margin-base( $theme: $theme, $margin-properties: ( margin-top, margin-bottom ) );
+}
+
+//////////////////////// SHADOWS
+@mixin shadow( 
+	$theme               : $current-theme, 
+	$external            : true, // This means the primary shadow is an outer shadow, and the high/lowlights are inner shadows.
+	$include-highlight   : false,
+	$include-lowlight    : false,
+	$primary-depth-factor: 1,
+	$spread              : 2.5,
+	$shift               : 1
+) { 
+	@if has-shadow( $theme: $theme ) {
+		$shadow-color: get-shadow-color( $theme: $theme );
+
+		$highlight-color: white; //if( $inverse,                      black,                       white );
+		$lowlight-color : shade( $shadow-color, 75% ); //if( $inverse, tint( $shadow-color, 75% ), shade( $shadow-color, 75% ) );
+
+		$primary-shadow     : '';
+		$primary-shadow-ff  : '';
+		$highlight-shadow   : '';
+		$highlight-shadow-ff: '';
+		$lowlight-shadow    : '';
+		$lowlight-shadow-ff : '';
+
+		$highlight-visibility-factor: if( $include-highlight, 1, 0 );
+		$lowlight-visibility-factor : if( $include-lowlight,  1, 0 );
+
+		$primary-depth  : get-shadow-primary-depth() * $primary-depth-factor;
+		$secondary-depth: get-shadow-secondary-depth();
+
+		$ff-factor: .5;
+
+		$opacity: get-shadow-opacity();
+
+		@if $external != false {
+			//                                                                                                                                              -------------------NO INSET SHADOW-------------------
+			$primary-shadow   : 0px ( $primary-depth * $shift              ) ( $primary-depth * $spread              ) 0px rgba( $shadow-color, $opacity ), 0px 0px 0px 0px rgba( $shadow-color, $opacity ) inset;
+			$primary-shadow-ff: 0px ( $primary-depth * $shift * $ff-factor ) ( $primary-depth * $spread * $ff-factor ) 0px rgba( $shadow-color, $opacity ), 0px 0px 0px 0px rgba( $shadow-color, $opacity ) inset;
+
+			//                    -------------------------------NO EXTERNAL SHADOW-------------------------------
+			$highlight-shadow   : 0px 0px 0px 0px rgba( $highlight-color, $opacity * $highlight-visibility-factor ), 0px (   $secondary-depth * $shift              ) ( $secondary-depth * $spread              ) 0px rgba( $highlight-color, $opacity * $highlight-visibility-factor ) inset;
+			$highlight-shadow-ff: 0px 0px 0px 0px rgba( $highlight-color, $opacity * $highlight-visibility-factor ), 0px (   $secondary-depth * $shift * $ff-factor ) ( $secondary-depth * $spread * $ff-factor ) 0px rgba( $highlight-color, $opacity * $highlight-visibility-factor ) inset;
+			$lowlight-shadow    : 0px 0px 0px 0px rgba( $lowlight-color,  $opacity *  $lowlight-visibility-factor ), 0px ( - $secondary-depth * $shift              ) ( $secondary-depth * $spread              ) 0px rgba( $lowlight-color,  $opacity *  $lowlight-visibility-factor ) inset;
+			$lowlight-shadow-ff : 0px 0px 0px 0px rgba( $lowlight-color,  $opacity *  $lowlight-visibility-factor ), 0px ( - $secondary-depth * $shift * $ff-factor ) ( $secondary-depth * $spread * $ff-factor ) 0px rgba( $lowlight-color,  $opacity *  $lowlight-visibility-factor ) inset;
+		}
+		@else {
+			//                  --------------NO EXTERNAL SHADOW--------------
+			$primary-shadow   : 0px 0px 0px 0px rgba( $shadow-color, $opacity ), 0px ( $primary-depth * $shift              ) ( $primary-depth * $spread              ) 0px rgba( $shadow-color, $opacity ) inset;
+			$primary-shadow-ff: 0px 0px 0px 0px rgba( $shadow-color, $opacity ), 0px ( $primary-depth * $shift * $ff-factor ) ( $primary-depth * $spread * $ff-factor ) 0px rgba( $shadow-color, $opacity ) inset;
+
+			//                                                                                                                                                                                        ------------------------------------NO INSET SHADOW------------------------------------
+			$highlight-shadow   : 0px (   $secondary-depth * $shift              ) ( $secondary-depth * $spread              ) 0px rgba( $highlight-color, $opacity * $highlight-visibility-factor ), 0px 0px 0px 0px rgba( $highlight-color, $opacity * $highlight-visibility-factor ) inset;
+			$highlight-shadow-ff: 0px (   $secondary-depth * $shift * $ff-factor ) ( $secondary-depth * $spread * $ff-factor ) 0px rgba( $highlight-color, $opacity * $highlight-visibility-factor ), 0px 0px 0px 0px rgba( $highlight-color, $opacity * $highlight-visibility-factor ) inset;
+			$lowlight-shadow    : 0px ( - $secondary-depth * $shift              ) ( $secondary-depth * $spread              ) 0px rgba( $lowlight-color,  $opacity *  $lowlight-visibility-factor ), 0px 0px 0px 0px rgba( $lowlight-color,  $opacity *  $lowlight-visibility-factor ) inset;
+			$lowlight-shadow-ff : 0px ( - $secondary-depth * $shift * $ff-factor ) ( $secondary-depth * $spread * $ff-factor ) 0px rgba( $lowlight-color,  $opacity *  $lowlight-visibility-factor ), 0px 0px 0px 0px rgba( $lowlight-color,  $opacity *  $lowlight-visibility-factor ) inset;
+		}
+
+		$all-shadows   : $primary-shadow   , $highlight-shadow   , $lowlight-shadow   ;
+		$all-shadows-ff: $primary-shadow-ff, $highlight-shadow-ff, $lowlight-shadow-ff;
+
+		@include box-shadow( $all-shadows );
+		.ff & {
+			@include box-shadow( $all-shadows-ff );
+		}
+	}
+}
+
+@mixin no-shadow( $theme: $current-theme ) {
+	@include shadow(
+		$theme : $current-theme,
+		$spread: 0,
+		$shift : 0
+	);
+}
+
+@mixin inset-shadow( 
+	$theme               : $current-theme,
+	$primary-depth-factor: 1
+) {
+	@include shadow( 
+		$theme               : $theme, 
+		$external            : false,
+		$primary-depth-factor: $primary-depth-factor
+	);
+}
+
+@mixin deep-shadow( 
+	$theme               : $current-theme,
+	$primary-depth-factor: 2
+) {
+	@include shadow( 
+		$theme               : $theme, 
+		$primary-depth-factor: $primary-depth-factor
+	);
+}
+
+@mixin deep-inset-shadow( 
+	$theme               : $current-theme,
+	$primary-depth-factor: 2
+) {
+	@include shadow( 
+		$theme               : $theme, 
+		$external            : false,
+		$primary-depth-factor: $primary-depth-factor
+	);
+}
+
+@mixin button-shadow( 
+	$theme    : $current-theme,
+	$depressed: false,
+	$hovered  : false,
+	$disabled : false
+) {
+	@include shadow( 
+		$theme               : $theme, 
+		// $inverse             : $inverse,
+		$include-lowlight    : true,
+		$include-highlight   : not $depressed,
+		$external            : not $depressed,
+		$primary-depth-factor: if( $hovered, 1.5, if( $disabled, 0, .5 ) )
+	);
+}
+
+@mixin text-shadowed(
+	$theme: $current-theme
+) {
+	@if has-shadow( $theme: $theme ) {
+		$shadow-color: get-shadow-color( $theme: $theme );
+
+		$secondary-depth: get-shadow-secondary-depth( $theme: $theme );
+
+		$opacity: get-shadow-opacity( $theme: $theme );
+
+		$spread: 2.5;
+		$shift : 1;
+
+		@include text-shadow( 0px ( $secondary-depth * $shift ) ( $secondary-depth * $spread ) rgba( $shadow-color, $opacity ) )
+	}
+}
+
+/////////////////////////////////////////////////////////////
+//////////////////////// INVERSABLE & SECONDARY-THEMED MIXINS
+/////////////////////////////////////////////////////////////
+
+//////////////////////// BORDERS
+@mixin border-base( 
+	$theme           : $current-theme,
+	$inverse         : $current-inverse,
+	$secondary       : $current-secondary,
+	$width-properties: ( 'border-width' ),
+	$heavy           : false
+) {
+	@if has-border( $theme: $theme ) and ( ( has-primary( $theme: $theme ) and not $secondary ) or has-secondary( $theme: $theme ) ) {
+		$background-color: get-color( $theme: $theme, $inverse: $inverse, $secondary: $secondary );
+		$dark-color : get-primary-dark-color( $theme: $theme );
+		$light-color: get-primary-light-color( $theme: $theme );
+		$color: contrast-color( 
+			$background-color, 
+			$dark-color, 
+			$light-color,
+			10%
+		);
+
+		$border-opacity: get-border-opacity();
+		$border-width: get-border-width( $theme: $theme );
+		$border-thick-factor: get-border-thick-factor( $theme: $theme );
+
+		// &, &:before {
+		border-color: $color;
+		border-color: rgba( $color, if( $heavy, get-border-heavy-opacity-factor(), 1 ) * $border-opacity );
+
+		border-style: get-border-style( $theme: $theme );
+
+		@each $width-property in $width-properties {
+			#{ $width-property }: $border-width;
+		}
+		// }
+
+		// &.#{ $class-alternate } {
+		// 	&, &:before {
+		// 		$color: get-color( $theme: $theme, $secondary: not $secondary, $inverse: $inverse );
+
+		// 		border-color: rgba( $color, if( $heavy, get-border-heavy-opacity-factor(), 1 ) * $border-opacity );
+		// 	}
+		// }
+
+		&.#{ $class-thick } {
+			// &, &:before {
+				@each $width-property in $width-properties {
+					#{ $width-property }: $border-width * $border-thick-factor;
+				}
+			// }
+		}
+
+		// &.#{ $class-dotted } {
+		// 	&, &:before {
+		// 		border-style: dotted;
+		// 	}
+		// }
+	}
+}
+@mixin bordered( 
+	$theme    : $current-theme,
+	$inverse  : $current-inverse,
+	$secondary: $current-secondary
+) {
+	@if has-border( $theme: $theme ) {
+		@include border-base( $theme: $theme, $inverse: $inverse, $secondary: $secondary, $heavy: false );
+		&.#{ $class-heavy } {
+			@include border-base( $theme: $theme, $inverse: $inverse, $secondary: $secondary, $heavy: true );
+		}
+	}
+}
+@mixin t-bordered( 
+	$theme    : $current-theme,
+	$inverse  : $current-inverse,
+	$secondary: $current-secondary
+) {
+	@if has-border( $theme: $theme ) {
+		@include border-base( $theme: $theme, $inverse: $inverse, $secondary: $secondary, $width-properties: ( 'border-top-width' ), $heavy: false );
+		&.#{ $class-heavy } {
+			@include border-base( $theme: $theme, $inverse: $inverse, $secondary: $secondary, $width-properties: ( 'border-top-width' ), $heavy: true );
+		}
+	}
+}
+@mixin r-bordered( 
+	$theme    : $current-theme,
+	$inverse  : $current-inverse,
+	$secondary: $current-secondary
+) {
+	@if has-border( $theme: $theme ) {
+		@include border-base( $theme: $theme, $inverse: $inverse, $secondary: $secondary, $width-properties: ( 'border-right-width' ), $heavy: false );
+		&.#{ $class-heavy } {
+			@include border-base( $theme: $theme, $inverse: $inverse, $secondary: $secondary, $width-properties: ( 'border-right-width' ), $heavy: true );
+		}
+	}
+}
+@mixin b-bordered( 
+	$theme    : $current-theme,
+	$inverse  : $current-inverse,
+	$secondary: $current-secondary
+) {
+	@if has-border( $theme: $theme ) {
+		@include border-base( $theme: $theme, $inverse: $inverse, $secondary: $secondary, $width-properties: ( 'border-bottom-width' ), $heavy: false );
+		&.#{ $class-heavy } {
+			@include border-base( $theme: $theme, $inverse: $inverse, $secondary: $secondary, $width-properties: ( 'border-bottom-width' ), $heavy: true );
+		}
+	}
+}
+@mixin l-bordered( 
+	$theme    : $current-theme,
+	$inverse  : $current-inverse,
+	$secondary: $current-secondary
+) {
+	@if has-border( $theme: $theme ) {
+		@include border-base( $theme: $theme, $inverse: $inverse, $secondary: $secondary, $width-properties: ( 'border-left-width' ), $heavy: false );
+		&.#{ $class-heavy } {
+			@include border-base( $theme: $theme, $inverse: $inverse, $secondary: $secondary, $width-properties: ( 'border-left-width' ), $heavy: true );
+		}
+	}
+}
+@mixin lr-bordered( 
+	$theme    : $current-theme,
+	$inverse  : $current-inverse,
+	$secondary: $current-secondary
+) {
+	@if has-border( $theme: $theme ) {
+		@include border-base( $theme: $theme, $inverse: $inverse, $secondary: $secondary, $width-properties: ( 'border-left-width', 'border-right-width' ), $heavy: false );
+		&.#{ $class-heavy } {
+			@include border-base( $theme: $theme, $inverse: $inverse, $secondary: $secondary, $width-properties: ( 'border-left-width', 'border-right-width' ), $heavy: true );
+		}
+	}
+}
+@mixin tb-bordered( 
+	$theme    : $current-theme,
+	$inverse  : $current-inverse,
+	$secondary: $current-secondary
+) {
+	@if has-border( $theme: $theme ) {
+		@include border-base( $theme: $theme, $inverse: $inverse, $secondary: $secondary, $width-properties: ( 'border-top-width', 'border-bottom-width' ), $heavy: false );
+		&.#{ $class-heavy } {
+			@include border-base( $theme: $theme, $inverse: $inverse, $secondary: $secondary, $width-properties: ( 'border-top-width', 'border-bottom-width' ), $heavy: true );
+		}
+	}
+}
+@mixin ltr-bordered( 
+	$theme    : $current-theme,
+	$inverse  : $current-inverse,
+	$secondary: $current-secondary
+) {
+	@if has-border( $theme: $theme ) {
+		@include border-base( $theme: $theme, $inverse: $inverse, $secondary: $secondary, $width-properties: ( 'border-left-width', 'border-top-width', 'border-right-width' ), $heavy: false );
+		&.#{ $class-heavy } {
+			@include border-base( $theme: $theme, $inverse: $inverse, $secondary: $secondary, $width-properties: ( 'border-left-width', 'border-top-width', 'border-right-width' ), $heavy: true );
+		}
+	}
+}
+@mixin lbr-bordered( 
+	$theme    : $current-theme,
+	$inverse  : $current-inverse,
+	$secondary: $current-secondary
+) {
+	@if has-border( $theme: $theme ) {
+		@include border-base( $theme: $theme, $inverse: $inverse, $secondary: $secondary, $width-properties: ( 'border-left-width', 'border-bottom-width', 'border-right-width' ), $heavy: false );
+		&.#{ $class-heavy } {
+			@include border-base( $theme: $theme, $inverse: $inverse, $secondary: $secondary, $width-properties: ( 'border-left-width', 'border-bottom-width', 'border-right-width' ), $heavy: true );
+		}
+	}
+}
+
+@mixin spinner( 
+	$theme    : $current-theme,
+	$inverse  : $current-inverse,
+	$secondary: $current-secondary
+) {
+	@if has-border( $theme: $theme ) {
+		@include t-bordered( $theme: $theme, $inverse: $inverse, $secondary: $secondary );
+
+		&, &:before {
+			border-left  : 0px;
+			border-right : 0px;
+			border-bottom: 0px;
+
+			@include border-box;
+			@include whole-rounded;
+			@include inline-block;
+
+			@include transitions;
+
+			padding: .5em;
+		}
+		&.#{ $class-big } {
+			&, &:before {
+				padding: 1em;
+			}
+		}
+
+		@include relative;
+		@include my-animation( $name: $class-spin, $timing-function: linear, $iteration-count: infinite, $duration: 1s );
+
+		$border-width: get-border-width( $theme: $theme );
+
+		&:before {
+			content: '';
+
+			@include absolute;
+
+			top : -$border-width;
+			left: 0px;
+
+			@include my-animation( $name: $class-spin, $timing-function: ease, $iteration-count: infinite, $duration: 2s );
+		}
+
+		&.#{ $class-thick } {
+			&:before {
+				top : -$border-width * get-border-thick-factor( $theme: $theme );
+			}
+
+			> * {
+				top : -$border-width * get-border-thick-factor( $theme: $theme );	
+			}
+		}
+
+		> * {
+			@include block;
+			@include absolute;
+			@include whole-width;
+			@include whole-height;
+
+			top : -$border-width;
+			left: 0px;
+
+			@include my-animation( $name: $class-spin, $timing-function: ease, $iteration-count: infinite, $duration: 1s, $direction: alternate );
+		}
+	}
+}
+
+//////////////////////// INPUTS
+@mixin text-input( 
+	$theme    : $current-theme,
+	$inverse  : $current-inverse,
+	$secondary: $current-secondary
+) {
+	@include border-box;
+	margin: 0px;
+
+	@include transitions;
+	@include when-just-touching {
+		@extend .#{ $class-transitions }.#{ $class-fast } !optional;
+	}
+
+	@include coloring(     $theme: $theme, $inverse: $inverse, $secondary: $secondary );
+	@include bordered(     $theme: $theme, $inverse: $inverse, $secondary: $secondary );
+	@include inset-shadow( $theme: $theme, $primary-depth-factor: 0 );
+
+	padding-left : get-less-padding( $theme: $theme );
+	padding-right: get-less-padding( $theme: $theme );
+
+	@include when-at {
+		@include transparent-border;
+		@include inset-shadow( $theme: $theme );
+	}
+	@include when-disabled {
+		@include whenever {
+			@include bordered(     $theme: $theme, $inverse: $inverse, $secondary: $secondary );
+			@include inset-shadow( $theme: $theme, $primary-depth-factor: 0 );
+		}
+	}
+}
+
+@mixin select(
+	$theme    : $current-theme,
+	$inverse  : $current-inverse,
+	$secondary: $current-secondary
+) {
+	$inactive-theme: darken-colors-by( $theme, 100% * ( 1 - $default-mostly ) );
+
+	@include appearance-none;
+	@include border-box;
+
+	margin      : 0px;
+	border      : 0;
+	padding-left: .6em;
+	
+	@include transitions;
+
+	@include no-rounding;
+
+	@include inline-block;
+
+	@include coloring( $theme: $theme, $inverse: $inverse, $secondary: $secondary );
+	@include hybrid-button( $theme: $theme, $inverse: $inverse, $secondary: $secondary );
+
+	@include when-disabled {
+		@include whenever {
+			@include mostly-opaque;
+		}
+	}
+
+	.not-ff.not-ie & {
+		padding-right: 1.5em; // the width of the arrow image
+
+		$foreground-color: contrast-color( 
+			get-color( $theme: $theme, $inverse: $inverse, $secondary: $secondary ), 
+			black, 
+			white,
+			10%
+		);
+
+		@if white == $foreground-color {
+			background-image: url( '../images/dropdown-arrow-white.png' );
+		}
+		@else {
+			background-image: url( '../images/arrow_down.svg' );
+		}
+		background-position: right center;
+		background-repeat: no-repeat;
+	}
+}
+
+//////////////////////// BUTTONS/COLORS
+@mixin text-coloring( 
+	$theme    : $current-theme, 
+	$inverse  : $current-inverse, 
+	$secondary: $current-secondary 
+) {
+	@if has-primary( $theme: $theme ) and has-secondary( $theme: $theme ) {
+		color: get-color( $theme: $theme, $inverse: $inverse, $secondary: $secondary );
+	}
+}
+
+@mixin sheer( 
+	$theme    : $current-theme, 
+	$inverse  : $current-inverse, 
+	$secondary: $current-secondary 
+) {
+	@if has-primary( $theme: $theme ) and has-secondary( $theme: $theme ) {
+		@include coloring( $theme: $theme, $inverse: $inverse, $secondary: $secondary );
+
+		$background-color: get-color( $theme: $theme, $secondary: $secondary, $inverse: $inverse );
+		background-color: rgba( $background-color, $default-barely );
+
+		// &.#{ $class-mostly } {
+		// 	background-color: rgba( $background-color, 1 - $default-mostly );
+		// }
+		
+	}
+}
+
+@mixin coloring( 
+	$theme    : $current-theme, 
+	$inverse  : $current-inverse, 
+	$secondary: $current-secondary 
+) {
+	@if has-primary( $theme: $theme ) and has-secondary( $theme: $theme ) {
+		$background-color: get-color( $theme: $theme, $inverse: $inverse, $secondary: $secondary );
+
+		// $darker-background-color: shade( $background-color, get-darkening( $theme: $theme, $secondary: $secondary ) );
+
+		// $much-darker-background-color: shade( $background-color, min( 100%, 2 * get-darkening( $theme: $theme, $secondary: $secondary ) ) );
+
+		// $lighter-background-color: tint( $background-color, get-lightening( $theme: $theme, $secondary: $secondary ) );
+
+		// $much-lighter-background-color: tint( $background-color, min( 100%, 2 * get-lightening( $theme: $theme, $secondary: $secondary ) ) );
+
+		// $desaturated-background-color: desaturate( $background-color, $default-desaturation );
+
+		$dark-color : get-primary-dark-color( $theme: $theme );
+		$light-color: get-primary-light-color( $theme: $theme );
+
+		background-color: $background-color;
+		color: contrast-color( 
+			$background-color, 
+			$dark-color, 
+			$light-color, 
+			10%
+		);
+
+		// &.#{ $class-darker } {
+		// 	background-color: $darker-background-color;
+		// 	color: contrast-color( 
+		// 		$darker-background-color, 
+		// 		$dark-color, 
+		// 		$light-color, 
+		// 		lightness( mix( $dark-color, $light-color ) )
+		// 	);
+		// }
+
+		// &.#{ $class-much-darker } {
+		// 	background-color: $much-darker-background-color;
+		// 	color: contrast-color( 
+		// 		$much-darker-background-color, 
+		// 		$dark-color, 
+		// 		$light-color, 
+		// 		lightness( mix( $dark-color, $light-color ) )
+		// 	);
+		// }
+
+		// &.#{ $class-lighter } {
+		// 	background-color: $lighter-background-color;
+		// 	color: contrast-color( 
+		// 		$lighter-background-color, 
+		// 		$dark-color, 
+		// 		$light-color, 
+		// 		lightness( mix( $dark-color, $light-color ) )
+		// 	);
+		// }
+
+		// &.#{ $class-much-lighter } {
+		// 	background-color: $much-lighter-background-color;
+		// 	color: contrast-color( 
+		// 		$much-lighter-background-color, 
+		// 		$dark-color, 
+		// 		$light-color, 
+		// 		lightness( mix( $dark-color, $light-color ) )
+		// 	);
+		// }
+
+		// &.#{ $class-desaturated } {
+		// 	background-color: $desaturated-background-color;
+		// 	color: contrast-color( 
+		// 		$desaturated-background-color, 
+		// 		$dark-color, 
+		// 		$light-color, 
+		// 		lightness( mix( $dark-color, $light-color ) )
+		// 	);
+		// }
+
+		// &.#{ $class-alternate } {
+		// 	$dark-color : get-secondary-dark-color( $theme: $theme );
+		// 	$light-color: get-secondary-light-color( $theme: $theme );
+
+		// 	color: contrast-color( 
+		// 		$background-color, 
+		// 		$dark-color, 
+		// 		$light-color, 
+		// 		lightness( mix( $dark-color, $light-color ) )
+		// 	);
+		// 	&.#{ $class-darker } {
+		// 		color: contrast-color( 
+		// 			$darker-background-color, 
+		// 			$dark-color, 
+		// 			$light-color, 
+		// 			lightness( mix( $dark-color, $light-color ) )
+		// 		);
+		// 	}
+		// }
+	}
+}
+
+@mixin button( 
+	$theme                 : $current-theme,
+	$inverse               : $current-inverse,
+	$secondary             : $current-secondary,
+	$lightening            : 10%,
+	$darkening             : 5%,
+	$extra-background-image: false
+) {
+	@if has-primary( $theme: $theme ) and has-secondary( $theme: $theme ) {
+		$hovered-theme : lighten-colors-by(    $theme, $lightening           );
+		$active-theme  : darken-colors-by(     $theme, $darkening            );
+		$inactive-theme: desaturate-colors-by( $theme, $default-desaturation );
+
+		@include transitions;
+		@include when-just-touching {
+			@extend .#{ $class-transitions }.#{ $class-fast } !optional;
+		}
+
+		@include button-shadow ( $theme: $theme );
+		@include button-shading( $theme: $theme, $inverse: $inverse, $secondary: $secondary, $extra-background-image: $extra-background-image );
+
+		@include when-at {
+			@include button-shadow ( $theme: $hovered-theme, $hovered: true );
+			@include button-shading( $theme: $hovered-theme, $inverse: $inverse, $secondary: $secondary, $extra-background-image: $extra-background-image );
+		}
+		@include when-active {
+			@include button-shadow ( $theme: $active-theme, $depressed: true );
+			@include button-shading( $theme: $active-theme, $inverse: $inverse, $secondary: $secondary, $extra-background-image: $extra-background-image );
+		}
+		@include when-disabled {
+			@include whenever {
+				@include button-shadow ( $theme: $inactive-theme, $disabled: true );
+				@include button-shading( $theme: $inactive-theme, $inverse: $inverse, $secondary: $secondary, $extra-background-image: $extra-background-image );
+			}
+		}
+	}
+}
+
+@mixin shallow-button( 
+	$theme                 : $current-theme,
+	$inverse               : $current-inverse,
+	$secondary             : $current-secondary,
+	$lightening            : 10%,
+	$darkening             : 5%,
+	$extra-background-image: false
+) {
+	@if has-primary( $theme: $theme ) and has-secondary( $theme: $theme ) {
+		$hovered-theme : lighten-colors-by(    $theme, $lightening           );
+		$active-theme  : darken-colors-by(     $theme, $darkening            );
+		$inactive-theme: desaturate-colors-by( $theme, $default-desaturation );
+
+		@include transitions;
+		@include when-just-touching {
+			@extend .#{ $class-transitions }.#{ $class-fast } !optional;
+		}
+
+		@include button-shadow ( $theme: $theme );
+		@include coloring( $theme: $theme, $inverse: $inverse, $secondary: $secondary );
+
+		@include when-at {
+			@include button-shadow ( $theme: $hovered-theme, $hovered: true );
+			@include coloring( $theme: $hovered-theme, $inverse: $inverse, $secondary: $secondary );
+		}
+		@include when-active {
+			@include button-shadow ( $theme: $active-theme, $depressed: true );
+			@include coloring( $theme: $active-theme, $inverse: $inverse, $secondary: $secondary );
+		}
+		@include when-disabled {
+			@include whenever {
+				@include button-shadow ( $theme: $inactive-theme, $disabled: true );
+				@include coloring( $theme: $inactive-theme, $inverse: $inverse, $secondary: $secondary );
+			}
+		}
+	}
+}
+
+// By default, a flat button takes the background/light color of the set when neither hovered nor active, and when hovered is lightened by the given
+// lightening and outer-shadowed, and when active is darkened and inset-shadowed; when inversed, the button takes the foreground/dark color of the set
+// and otherwise has the same styling behavior.
+@mixin flat-button(
+	$theme     : $current-theme, 
+	$inverse   : $current-inverse,
+	$secondary : $current-secondary,
+	$darkening : 10%, 
+	$lightening: 5%
+) {
+	@if has-primary( $theme: $theme ) and has-secondary( $theme: $theme ) {
+		$hovered-theme : lighten-colors-by(    $theme, $lightening           );
+		$active-theme  : darken-colors-by(     $theme, $darkening            );
+		$inactive-theme: desaturate-colors-by( $theme, $default-desaturation );
+
+		// @ include coloring( $theme: $theme, $inverse: $inverse, $secondary: $secondary );
+
+		@include transitions;
+		@include when-just-touching { // Only speed up the transitions when the user is actually touching the element - not when just the $class-active is applied...
+			@extend .#{ $class-transitions }.#{ $class-fast } !optional;
+		}
+
+		@include shadow( $theme: $theme, $primary-depth-factor: 0 );
+		@include when-at {
+			@include coloring( $theme: $hovered-theme, $inverse: $inverse, $secondary: $secondary );
+			@include shadow  ( $theme: $hovered-theme );
+		}
+		@include when-active {
+			@include coloring( $theme: $active-theme, $inverse: $inverse, $secondary: $secondary );
+			@include shadow  ( $theme: $active-theme, $external: false );
+		}
+		@include when-disabled {
+			@include whenever {
+				@include coloring( $theme: $inactive-theme, $inverse: $inverse, $secondary: $secondary );
+				@include shadow  ( $theme: $inactive-theme, $primary-depth-factor: 0 );
+			}
+		}
+	}
+}
+
+@mixin hybrid-button(
+	$theme     : $current-theme, 
+	$inverse   : $current-inverse,
+	$secondary : $current-secondary,
+	$darkening : 10%, 
+	$lightening: 5%,
+	$extra-background-image: false
+
+) {
+	@if has-primary( $theme: $theme ) and has-secondary( $theme: $theme ) {
+		$hovered-theme : lighten-colors-by(    $theme, $lightening           );
+		$active-theme  : darken-colors-by(     $theme, $darkening            );
+		$inactive-theme: desaturate-colors-by( $theme, $default-desaturation );
+
+		// @ include button-shading( $theme: $theme, $inverse: $inverse, $secondary: $secondary, $shading-opacity: 0, $extra-background-image: $extra-background-image );
+
+		@include transitions;
+		@include when-just-touching { // Only speed up the transitions when the user is actually touching the element - not when just the $class-active is applied...
+			@extend .#{ $class-transitions }.#{ $class-fast } !optional;
+		}
+
+		@include shadow( $theme: $theme, $primary-depth-factor: 0 );
+		@include when-at {
+			@include button-shadow ( $theme: $hovered-theme, $hovered: true );
+			@include button-shading( $theme: $hovered-theme, $inverse: $inverse, $secondary: $secondary, $extra-background-image: $extra-background-image );
+		}
+		@include when-active {
+			@include button-shadow ( $theme: $active-theme, $depressed: true );
+			@include button-shading( $theme: $active-theme, $inverse: $inverse, $secondary: $secondary, $extra-background-image: $extra-background-image );
+		}
+		@include when-disabled {
+			@include whenever {
+				@include no-shadow;
+				@include button-shading( $theme: $theme, $inverse: $inverse, $secondary: $secondary, $shading-opacity: 0, $extra-background-image: $extra-background-image );
+				@include coloring      ( $theme: $inactive-theme, $inverse: $inverse, $secondary: $secondary );
+			}
+		}
+	}
+}
+
+
+@mixin button-shading(
+	$theme                 : $current-theme, 
+	$inverse               : $current-inverse,
+	$secondary             : $current-secondary,
+	$shading-opacity       : .2, 
+	$extra-background-image: false
+) {
+	@if has-primary( $theme: $theme ) and has-secondary( $theme: $theme ) {
+		$background-color: get-color( $theme: $theme, $inverse: $inverse, $secondary: $secondary );
+
+		$lightening: $shading-opacity;
+		$darkening: $shading-opacity / 2;
+
+		$background-color-stops       : color-stops( rgba( white, $lightening ),  rgba( black, $darkening ) );
+
+		$dark-color : get-primary-dark-color(  $theme: $theme );
+		$light-color: get-primary-light-color( $theme: $theme );
+
+		color: contrast-color( 
+			$background-color, 
+			$dark-color, 
+			$light-color,
+			10%
+		);
+		background-color: $background-color;
+		@if $extra-background-image == false {
+			@include background-image( linear-gradient( top, $background-color-stops ) );
+		}
+		@else {
+			@include background-image( linear-gradient( top, $background-color-stops ), $extra-background-image );
+		}
+	}
+}

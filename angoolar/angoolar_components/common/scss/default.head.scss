@@ -1,0 +1,108 @@
+@import "partial/common";
+
+@import "partial/animations";
+
+@import "partial/structure";
+
+@include declare-themes;
+
+$zoom-extent: .06125;
+
+.s-animate- {
+	&opaque {
+		&.ng-enter, &.ng-leave {
+			@include transitions;
+		}
+
+		&.ng-enter {
+			@include transparent;
+			&.and-zoom { @include scale( 1 + $zoom-extent, 1 + $zoom-extent ); }
+			&.ng-enter-active {
+				@include opaque;
+				&.and-zoom { @include scale( 1, 1 ); }
+			}
+		}
+
+		&.ng-leave {
+			@include opaque;
+			&.in-place {
+				@include absolute;
+				@include tr;
+				@include whole-width;
+				@include whole-height;
+			}
+			&.and-zoom { @include scale( 1, 1 ); }
+			&.ng-leave-active {
+				@include transparent;
+				&.and-zoom { @include scale( 1 + $zoom-extent, 1 + $zoom-extent ); }
+			}
+		}
+	}
+
+	&mostly-opaque {
+		@include mostly-opaque;
+		
+		&.ng-enter, &.ng-leave {
+			@include transitions;
+		}
+
+		&.ng-enter {
+			@include transparent;
+			&.ng-enter-active {
+				@include mostly-opaque;
+			}
+		}
+
+		&.ng-leave {
+			@include mostly-opaque;
+			&.ng-leave-active {
+				@include transparent;
+			}
+		}
+	}
+
+	&slide-h {
+		&.ng-enter, &.ng-leave {
+			@include transitions;
+		}
+
+		&.ng-enter {
+			.to-left & { @include create-transform( $trans-x: 100% ); }
+			.to-right & { @include create-transform( $trans-x: -100% ); }
+			&.ng-enter-active {
+				@include create-transform( $trans-x: 0% );
+			}
+		}
+
+		&.ng-leave {
+			@include create-transform( $trans-x: 0% );
+			@include absolute;
+			@include tr;
+			@include whole-width;
+			@include whole-height;
+			&.ng-leave-active {
+				.to-left & { @include create-transform( $trans-x: -100% ); }
+				.to-right & { @include create-transform( $trans-x: 100% ); }
+			}
+		}
+	}
+
+	&max-width {
+		&.ng-enter, &.ng-leave, &.ng-move {
+			@include transitions;
+			@include hardware-render;
+			@include no-overflow;
+			&-stagger { @include transition-delay( .05s ); }
+		}
+
+		&.ng-enter, &.ng-move, &.ng-leave.ng-leave-active {
+			max-width: 0em;
+			margin   : 0em;
+			padding  : 0em;
+		}
+
+		&, &.ng-enter.ng-enter-active, &.ng-move.ng-move-active, &.ng-leave {
+			max-width: 12em;
+		}
+	}
+}

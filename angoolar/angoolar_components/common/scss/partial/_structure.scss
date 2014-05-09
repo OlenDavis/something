@@ -1,0 +1,92 @@
+@import "compass/reset";
+
+@include establish-baseline;
+@include declare-base-theme;
+// @ include declare-text-styles;
+
+$current-inverse: false;
+$current-secondary: false;
+$current-theme: $default-theme;
+
+body {
+	-webkit-font-smoothing: antialiased;//subpixel-antialiased;//
+
+	-webkit-tap-highlight-color: rgba( white, 0 );
+	// This prevents the clicking links and whatnot from changing the color of the controls being tapped.
+	// This is particularly relevant for iOS.
+
+	// A better alternative: by default elements on the page aren't selectable:
+	@extend .#{ $class-not-selectable };
+	// but, elements one would semantically expect to be texty are:
+	
+	cursor: default;
+	
+	* {
+		// This will prevent the little dotted areas from showing up around links particularly on IE browsers, but elsewhere as well.
+		outline: none;
+	}
+
+	a {
+		color: inherit;
+	}
+}
+
+p, h1, h2, h3, h4, h5, h6 {
+	@extend .#{ $class-selectable };
+}
+
+a { @extend .#{ $class-link }; }
+small { @extend .#{ $class-small }; }
+b, strong {&, td & { @extend .#{ $class-b }; }}
+i, em { @extend .#{ $class-em }; }
+u { @extend .#{ $class-u }; }
+table { @extend .#{ $class-table }; }
+
+select {
+	margin: 0;
+}
+
+input, textarea, keygen, select, button {
+	padding       : initial;
+	text-transform: inherit;
+}
+input, textarea, keygen, select, button, caption, th, td {
+	font: inherit;
+}
+
+.#{ $class-inline-block } {
+	.state-changed & {
+		@include gone;
+	}
+}
+
+.#{ $class-transitions },
+.#{ $class-hoverable } .#{ $class-hovered },
+.#{ $class-hoverable } .#{ $class-not-hovered } {
+	.state-changed & {
+		@include no-transitions;
+	}
+}
+
+// ::-webkit-scrollbar { 
+//     display: none; 
+// }
+
+.media-footer {
+	letter-spacing: .05em;
+}
+
+$scale-extent: .05;
+.grow-and-shrink {
+	@include when-hovered {
+		@include scale( 1 + $scale-extent, 1 + $scale-extent );
+		
+		@include when-touching {
+			@include scale( 1 - $scale-extent, 1 - $scale-extent );
+		}
+	}
+}
+
+.single-lined {
+	line-height: 1em;
+}

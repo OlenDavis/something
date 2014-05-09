@@ -1,0 +1,583 @@
+
+$name-index           : 1;
+$extends-index        : 2;
+$primary-index        : 3;
+$secondary-index      : 4;
+$shadow-index         : 5;
+$border-index         : 6;
+$spacing-index        : 7;
+$text-styles-index    : 8;
+$theme-modifiers-index: 9;
+$theme-styles-index   : 10;
+
+$primary-light-index     : 1;
+$primary-dark-index      : 2;
+$primary-lightening-index: 3;
+$primary-darkening-index : 4;
+
+$secondary-light-index     : 1;
+$secondary-dark-index      : 2;
+$secondary-lightening-index: 3;
+$secondary-darkening-index : 4;
+
+$shadow-color-index               : 1;
+$shadow-opacity-index             : 2;
+$shadow-primary-depth-index       : 3;
+$shadow-secondary-depth-index     : 4;
+$shadow-hovered-depth-factor-index: 5;
+
+$border-radius-index              : 1;
+$border-width-index               : 2;
+$border-style-index               : 3;
+$border-opacity-index             : 4;
+$border-heavy-opacity-factor-index: 5;
+$border-thick-factor-index        : 6;
+
+$standard-padding-index: 1;
+$less-padding-index    : 2;
+$more-padding-index    : 3;
+$way-more-padding-index: 4;
+$standard-margin-index : 5;
+$less-margin-index     : 6;
+$more-margin-index     : 7;
+$way-more-margin-index : 8;
+
+$text-styles-length: 10;
+
+$text-class-name-index                     :  1;
+$text-font-family-index                    :  2;
+$text-color-index                          :  3;
+$text-font-size-index                      :  4;
+$text-lines-index                          :  5;
+$text-leader-index                         :  6;
+$text-leader-property-index                :  7;
+$text-trailer-index                        :  8;
+$text-trailer-property-index               :  9;
+$text-line-height-matching-properties-index: $text-styles-length;
+
+$theme-modifiers-is-themeless-index      : 1;
+$theme-modifiers-with-this-modifiers     : 2;
+$theme-modifiers-with-themed-style       : 3;
+$theme-modifiers-disable-inverse-index   : 4;
+$theme-modifiers-disable-secondary-index : 5;
+$theme-modifiers-with-when-hovered-index : 6;
+$theme-modifiers-with-when-active-index  : 7;
+$theme-modifiers-with-when-touching-index: 8;
+$theme-modifiers-with-when-retina-index  : 9;
+$theme-modifiers-with-when-mobile-index  : 10;
+$theme-modifiers-with-when-first-index   : 11;
+$theme-modifiers-with-when-last-index    : 12;
+$theme-modifiers-with-when-ff-index      : 13;
+$theme-modifiers-with-when-ie-index      : 14;
+
+$theme-styles-without-base-index       : 1;
+$theme-styles-without-text-styles-index: 2;
+$theme-styles-without-rounding-index   : 3;
+$theme-styles-without-padding-index    : 4;
+$theme-styles-without-margin-index     : 5;
+$theme-styles-without-shadows-index    : 6;
+$theme-styles-without-borders-index    : 7;
+$theme-styles-without-inputs-index     : 8;
+$theme-styles-without-buttons-index    : 9;
+$theme-styles-without-coloring-index   : 10;
+
+@function has-theme-name(    $theme: $current-theme ) { @return false != nth( $theme, $name-index    ); }
+@function has-theme-extends( $theme: $current-theme ) { @return false != nth( $theme, $extends-index ); }
+
+@function get-theme-name(    $theme: $current-theme ) { @return nth( $theme, $name-index    ); }
+@function get-theme-extends( $theme: $current-theme ) { @return nth( $theme, $extends-index ); }
+
+@function has-primary(   $theme: $current-theme ) { @return false != nth( $theme,   $primary-index ); }
+@function has-secondary( $theme: $current-theme ) { @return false != nth( $theme, $secondary-index ); }
+
+@function get-primary-color(   $theme: $current-theme, $inverse: $current-inverse ) { @return nth( nth( $theme,   $primary-index ), if( $inverse,   $primary-dark-index,   $primary-light-index ) ); }
+@function get-secondary-color( $theme: $current-theme, $inverse: $current-inverse ) { @return nth( nth( $theme, $secondary-index ), if( $inverse, $secondary-dark-index, $secondary-light-index ) ); }
+
+@function get-lightening( $theme: $current-theme, $secondary: $current-secondary ) { @return nth( nth( $theme, $primary-index ), if( $secondary, $secondary-lightening-index, $primary-lightening-index ) ); }
+@function get-darkening(  $theme: $current-theme, $secondary: $current-secondary ) { @return nth( nth( $theme, $primary-index ), if( $secondary, $secondary-darkening-index,  $primary-darkening-index  ) ); }
+
+@function get-primary-foreground-color(   $theme: $current-theme, $inverse: $current-inverse ) { @return nth( nth( $theme,   $primary-index ), if( $inverse,   $primary-light-index,   $primary-dark-index ) ); }
+@function get-secondary-foreground-color( $theme: $current-theme, $inverse: $current-inverse ) { @return nth( nth( $theme, $secondary-index ), if( $inverse, $secondary-light-index, $secondary-dark-index ) ); }
+@function get-foreground-color( $theme: $current-theme, $secondary: $current-secondary, $inverse: $current-inverse ) { @return if( $secondary, get-secondary-foreground-color( $theme: $theme, $inverse: $inverse ), get-primary-foreground-color(   $theme: $theme, $inverse: $inverse ) ); }
+
+@function get-primary-light-color( $theme: $current-theme ) { @return nth( nth( $theme, $primary-index ), $primary-light-index ); }
+@function get-primary-dark-color(  $theme: $current-theme ) { @return nth( nth( $theme, $primary-index ),  $primary-dark-index ); }
+
+@function get-secondary-light-color( $theme: $current-theme ) { @return nth( nth( $theme, $secondary-index ), $secondary-light-index ); }
+@function get-secondary-dark-color(  $theme: $current-theme ) { @return nth( nth( $theme, $secondary-index ),  $secondary-dark-index ); }
+
+@function get-color( $theme: $current-theme, $inverse: $current-inverse, $secondary: $current-secondary ) { @return if( not $secondary, get-secondary-color( $theme, $inverse ), get-primary-color( $theme, $inverse ) ); }
+
+@function has-shadow( $theme: $current-theme ) { @return false != nth( $theme, $shadow-index ); }
+
+@function get-shadow-color(                $theme: $current-theme ) { @return nth( nth( $theme, $shadow-index ), $shadow-color-index                ); }
+@function get-shadow-primary-depth(        $theme: $current-theme ) { @return nth( nth( $theme, $shadow-index ), $shadow-primary-depth-index        ); }
+@function get-shadow-secondary-depth(      $theme: $current-theme ) { @return nth( nth( $theme, $shadow-index ), $shadow-secondary-depth-index      ); }
+@function get-shadow-opacity(              $theme: $current-theme ) { @return nth( nth( $theme, $shadow-index ), $shadow-opacity-index              ); }
+@function get-shadow-hovered-depth-factor( $theme: $current-theme ) { @return nth( nth( $theme, $shadow-index ), $shadow-hovered-depth-factor-index ); }
+
+@function has-border( $theme: $current-theme ) { @return false != nth( $theme, $border-index ); }
+
+@function get-border-radius(               $theme: $current-theme ) { @return nth( nth( $theme, $border-index ), $border-radius-index                 ); }
+@function get-border-width(                $theme: $current-theme ) { @return nth( nth( $theme, $border-index ), $border-width-index                  ); }
+@function get-border-style(                $theme: $current-theme ) { @return nth( nth( $theme, $border-index ), $border-style-index                  ); }
+@function get-border-opacity(              $theme: $current-theme ) { @return nth( nth( $theme, $border-index ), $border-opacity-index                ); }
+// @function get-secondary-border-opacity(    $theme: $current-theme ) { @return nth( nth( $theme, $border-index ), $secondary-border-opacity-index      ); }
+@function get-border-heavy-opacity-factor( $theme: $current-theme ) { @return nth( nth( $theme, $border-index ), $border-heavy-opacity-factor-index   ); }
+@function get-border-thick-factor(         $theme: $current-theme ) { @return nth( nth( $theme, $border-index ), $border-thick-factor-index           ); }
+
+@function has-spacing( $theme: $current-theme ) { @return false != nth( $theme, $spacing-index ); }
+
+@function get-standard-padding( $theme: $current-theme ) { @return nth( nth( $theme, $spacing-index ), $standard-padding-index ); }
+@function get-less-padding(     $theme: $current-theme ) { @return nth( nth( $theme, $spacing-index ), $less-padding-index     ); }
+@function get-more-padding(     $theme: $current-theme ) { @return nth( nth( $theme, $spacing-index ), $more-padding-index     ); }
+@function get-way-more-padding( $theme: $current-theme ) { @return nth( nth( $theme, $spacing-index ), $way-more-padding-index ); }
+@function get-standard-margin(  $theme: $current-theme ) { @return nth( nth( $theme, $spacing-index ), $standard-margin-index  ); }
+@function get-less-margin(      $theme: $current-theme ) { @return nth( nth( $theme, $spacing-index ), $less-margin-index      ); }
+@function get-more-margin(      $theme: $current-theme ) { @return nth( nth( $theme, $spacing-index ), $more-margin-index      ); }
+@function get-way-more-margin(  $theme: $current-theme ) { @return nth( nth( $theme, $spacing-index ), $way-more-margin-index  ); }
+
+@function get-text-styles( $theme: $current-theme ) { @return nth( $theme, $text-styles-index ); }
+
+@function get-text-class-name(                      $text-styles ) { @return nth( $text-styles, $text-class-name-index                      ); }
+@function get-text-font-family(                     $text-styles ) { @return nth( $text-styles, $text-font-family-index                     ); }
+@function get-text-color(                           $text-styles ) { @return nth( $text-styles, $text-color-index                           ); }
+@function get-text-font-size(                       $text-styles ) { @return nth( $text-styles, $text-font-size-index                       ); }
+@function get-text-lines(                           $text-styles ) { @return nth( $text-styles, $text-lines-index                           ); }
+@function get-text-leader(                          $text-styles ) { @return nth( $text-styles, $text-leader-index                          ); }
+@function get-text-leader-property(                 $text-styles ) { @return nth( $text-styles, $text-leader-property-index                 ); }
+@function get-text-trailer(                         $text-styles ) { @return nth( $text-styles, $text-trailer-index                         ); }
+@function get-text-trailer-property(                $text-styles ) { @return nth( $text-styles, $text-trailer-property-index                ); }
+@function get-text-line-height-matching-properties( $text-styles ) { @return nth( $text-styles, $text-line-height-matching-properties-index ); }
+
+@function get-theme-is-themeless(        $theme: $current-theme ) { @return nth( nth( $theme, $theme-modifiers-index ), $theme-modifiers-is-themeless-index       ); }
+@function get-theme-with-this-modifiers( $theme: $current-theme ) { @return nth( nth( $theme, $theme-modifiers-index ), $theme-modifiers-with-this-modifiers      ); }
+@function get-theme-with-themed-style(   $theme: $current-theme ) { @return nth( nth( $theme, $theme-modifiers-index ), $theme-modifiers-with-themed-style        ); }
+@function get-theme-disable-inverse(     $theme: $current-theme ) { @return nth( nth( $theme, $theme-modifiers-index ), $theme-modifiers-disable-inverse-index    ); }
+@function get-theme-disable-secondary(   $theme: $current-theme ) { @return nth( nth( $theme, $theme-modifiers-index ), $theme-modifiers-disable-secondary-index  ); }
+@function get-theme-with-when-hovered(   $theme: $current-theme ) { @return nth( nth( $theme, $theme-modifiers-index ), $theme-modifiers-with-when-hovered-index  ); }
+@function get-theme-with-when-active(    $theme: $current-theme ) { @return nth( nth( $theme, $theme-modifiers-index ), $theme-modifiers-with-when-active-index   ); }
+@function get-theme-with-when-touching(  $theme: $current-theme ) { @return nth( nth( $theme, $theme-modifiers-index ), $theme-modifiers-with-when-touching-index ); }
+@function get-theme-with-when-retina(    $theme: $current-theme ) { @return nth( nth( $theme, $theme-modifiers-index ), $theme-modifiers-with-when-retina-index   ); }
+@function get-theme-with-when-mobile(    $theme: $current-theme ) { @return nth( nth( $theme, $theme-modifiers-index ), $theme-modifiers-with-when-mobile-index   ); }
+@function get-theme-with-when-first(     $theme: $current-theme ) { @return nth( nth( $theme, $theme-modifiers-index ), $theme-modifiers-with-when-first-index    ); }
+@function get-theme-with-when-last(      $theme: $current-theme ) { @return nth( nth( $theme, $theme-modifiers-index ), $theme-modifiers-with-when-last-index     ); }
+@function get-theme-with-when-ff(        $theme: $current-theme ) { @return nth( nth( $theme, $theme-modifiers-index ), $theme-modifiers-with-when-ff-index       ); }
+@function get-theme-with-when-ie(        $theme: $current-theme ) { @return nth( nth( $theme, $theme-modifiers-index ), $theme-modifiers-with-when-ie-index       ); }
+
+@function get-theme-styles-without-base(        $theme: $current-theme ) { @return nth( nth( $theme, $theme-styles-index ), $theme-styles-without-base-index        ); }
+@function get-theme-styles-without-text-styles( $theme: $current-theme ) { @return nth( nth( $theme, $theme-styles-index ), $theme-styles-without-text-styles-index ); }
+@function get-theme-styles-without-rounding(    $theme: $current-theme ) { @return nth( nth( $theme, $theme-styles-index ), $theme-styles-without-rounding-index    ); }
+@function get-theme-styles-without-padding(     $theme: $current-theme ) { @return nth( nth( $theme, $theme-styles-index ), $theme-styles-without-padding-index     ); }
+@function get-theme-styles-without-margin(      $theme: $current-theme ) { @return nth( nth( $theme, $theme-styles-index ), $theme-styles-without-margin-index      ); }
+@function get-theme-styles-without-shadows(     $theme: $current-theme ) { @return nth( nth( $theme, $theme-styles-index ), $theme-styles-without-shadows-index     ); }
+@function get-theme-styles-without-borders(     $theme: $current-theme ) { @return nth( nth( $theme, $theme-styles-index ), $theme-styles-without-borders-index     ); }
+@function get-theme-styles-without-inputs(      $theme: $current-theme ) { @return nth( nth( $theme, $theme-styles-index ), $theme-styles-without-inputs-index      ); }
+@function get-theme-styles-without-buttons(     $theme: $current-theme ) { @return nth( nth( $theme, $theme-styles-index ), $theme-styles-without-buttons-index     ); }
+@function get-theme-styles-without-coloring(    $theme: $current-theme ) { @return nth( nth( $theme, $theme-styles-index ), $theme-styles-without-coloring-index    ); }
+
+@function update-list-at( $list, $index, $value ) {
+	$new-list: ();
+	$length: length( $list );
+	@for $i from 1 through $length {
+		$new-list: append( $new-list, if( $i == $index, $value, nth( $list, $i ) ) );
+	}
+	@return $new-list;
+}
+
+@function darken-colors-by( $theme, $darkening ) {
+	@if has-primary() {
+		$primary-colors: nth( $theme, $primary-index );
+		$primary-colors: update-list-at( $primary-colors, $primary-light-index, shade( get-primary-light-color( $theme ), $darkening ) );
+		$primary-colors: update-list-at( $primary-colors, $primary-dark-index,  shade( get-primary-dark-color(  $theme ), $darkening ) );
+		$theme: update-list-at( $theme,   $primary-index,   $primary-colors );
+	}
+	@if has-secondary() {
+		$secondary-colors: nth( $theme, $secondary-index );
+		$secondary-colors: update-list-at( $secondary-colors, $secondary-light-index, shade( get-secondary-light-color( $theme ), $darkening ) );
+		$secondary-colors: update-list-at( $secondary-colors, $secondary-dark-index,  shade( get-secondary-dark-color(  $theme ), $darkening ) );
+		$theme: update-list-at( $theme, $secondary-index, $secondary-colors );
+	}
+	@return $theme;
+}
+
+@function lighten-colors-by( $theme, $lightening ) {
+	@if has-primary() {
+		$primary-colors: nth( $theme, $primary-index );
+		$primary-colors: update-list-at( $primary-colors, $primary-light-index, tint( get-primary-light-color( $theme ), $lightening ) );
+		$primary-colors: update-list-at( $primary-colors, $primary-dark-index,  tint( get-primary-dark-color(  $theme ), $lightening ) );
+		$theme: update-list-at( $theme,   $primary-index,   $primary-colors );
+	}
+	@if has-secondary() {
+		$secondary-colors: nth( $theme, $secondary-index );
+		$secondary-colors: update-list-at( $secondary-colors, $secondary-light-index, tint( get-secondary-light-color( $theme ), $lightening ) );
+		$secondary-colors: update-list-at( $secondary-colors, $secondary-dark-index,  tint( get-secondary-dark-color(  $theme ), $lightening ) );
+		$theme: update-list-at( $theme, $secondary-index, $secondary-colors );
+	}
+	@return $theme;
+}
+
+@function desaturate-colors-by( $theme, $desaturation ) {
+	@if has-primary() {
+		$primary-colors: nth( $theme, $primary-index );
+		$primary-colors: update-list-at( $primary-colors, $primary-light-index, desaturate( get-primary-light-color( $theme ), $desaturation ) );
+		$primary-colors: update-list-at( $primary-colors, $primary-dark-index,  desaturate( get-primary-dark-color(  $theme ), $desaturation ) );
+		$theme: update-list-at( $theme,   $primary-index,   $primary-colors );
+	}
+	@if has-secondary() {
+		$secondary-colors: nth( $theme, $secondary-index );
+		$secondary-colors: update-list-at( $secondary-colors, $secondary-light-index, desaturate( get-secondary-light-color( $theme ), $desaturation ) );
+		$secondary-colors: update-list-at( $secondary-colors, $secondary-dark-index,  desaturate( get-secondary-dark-color(  $theme ), $desaturation ) );
+		$theme: update-list-at( $theme, $secondary-index, $secondary-colors );
+	}
+	@return $theme;
+}
+
+@function get-themed-style-name(
+	$class-name,
+	$theme       : $current-theme,
+	$is-themeless: $current-is-themeless,
+	$inverse     : $current-inverse,
+	$secondary   : $current-secondary
+) {
+	$style-name: "";
+
+	@if $is-themeless != true  { $style-name: "#{ if( $style-name == "", "", "#{ $style-name }-" ) }#{ get-theme-name( $theme: $theme ) }"; }
+	@if $inverse      != false { $style-name: "#{ if( $style-name == "", "", "#{ $style-name }-" ) }#{ $class-inverse   }"; }
+	@if $secondary    != false { $style-name: "#{ if( $style-name == "", "", "#{ $style-name }-" ) }#{ $class-secondary }"; }
+	@if $class-name   != false { $style-name: "#{ if( $style-name == "", "", "#{ $style-name }-" ) }#{ $class-name      }"; }
+
+	@return $style-name;
+}
+
+@function get-theme-selector( $theme: $current-theme ) {
+	$theme-selector: ".#{ get-theme-name( $theme: $theme ) }";
+	@if has-theme-extends( $theme: $theme ) {
+		$theme-selector: "#{ $theme-selector }, #{ get-theme-extends( $theme: $theme ) }";
+	}
+
+	@return $theme-selector;
+}
+
+@function get-when-hovered-class-name( $class-name ) {
+	@return $class-name + "-#{ $class-when-hovered }";
+}
+
+@function get-when-active-class-name( $class-name ) {
+	@return $class-name + "-#{ $class-when-active }";
+}
+
+@function get-when-touching-class-name( $class-name ) {
+	@return $class-name + "-#{ $class-when-touching }";
+}
+
+@function get-when-retina-class-name( $class-name ) {
+	@return $class-name + "-#{ $class-when-retina }";
+}
+
+@function get-when-first-class-name( $class-name ) {
+	@return $class-name + "-#{ $class-when-first }";
+}
+
+@function get-when-last-class-name( $class-name ) {
+	@return $class-name + "-#{ $class-when-last }";
+}
+
+@function get-when-ff-class-name( $class-name ) {
+	@return $class-name + "-#{ $class-when-ff }";
+}
+
+@mixin declare-inner-selectors-plain( $class-name ) {
+	.#{ $class-name }, &.#{ $class-name } {
+		@content;
+	}
+}
+
+@mixin actually-declare-theme(
+	$theme                   : $current-theme,
+	$is-themeless            : $current-is-themeless,
+	$with-themed-style       : $current-with-themed-style,
+	$with-theme-when-hovered : $current-with-theme-when-hovered,
+	$with-theme-when-active  : $current-with-theme-when-active, 
+	$with-theme-when-touching: $current-with-theme-when-touching, 
+	$with-theme-when-retina  : $current-with-theme-when-retina, 
+	$with-theme-when-mobile  : $current-with-theme-when-mobile, 
+	$with-theme-when-first   : $current-with-theme-when-first, 
+	$with-theme-when-last    : $current-with-theme-when-last, 
+	$with-theme-when-ff      : $current-with-theme-when-ff,
+	$with-theme-when-ie      : $current-with-theme-when-ie
+) {
+	@if $is-themeless {
+		@content;
+	}
+	@else {
+		$theme-name              : get-theme-name(               $theme      );
+		$theme-name-when-hovered : get-when-hovered-class-name(  $theme-name );
+		$theme-name-when-active  : get-when-active-class-name(   $theme-name );
+		$theme-name-when-touching: get-when-touching-class-name( $theme-name );
+		$theme-name-when-retina  : get-when-retina-class-name(   $theme-name );
+		$theme-name-when-mobile  : get-when-mobile-class-name(   $theme-name );
+		$theme-name-when-first   : get-when-first-class-name(    $theme-name );
+		$theme-name-when-last    : get-when-last-class-name(     $theme-name );
+		$theme-name-when-ff      : get-when-ff-class-name(       $theme-name );
+		$theme-name-when-ie      : get-when-ie-class-name(       $theme-name );
+
+		$theme-selector: get-theme-selector( $theme: $theme );
+
+		                                 #{ $theme-selector           } {                          @content   }
+		@if $with-theme-when-hovered  { .#{ $theme-name-when-hovered  } { @include when-hovered  { @content } } }
+		@if $with-theme-when-active   { .#{ $theme-name-when-active   } { @include when-active   { @content } } }
+		@if $with-theme-when-touching { .#{ $theme-name-when-touching } { @include when-touching { @content } } }
+		@if $with-theme-when-retina   { .#{ $theme-name-when-retina   } { @include when-retina   { @content } } }
+		@if $with-theme-when-mobile   { .#{ $theme-name-when-mobile   } { @include when-mobile   { @content } } }
+		@if $with-theme-when-first    { .#{ $theme-name-when-first    } { @include when-first    { @content } } }
+		@if $with-theme-when-last     { .#{ $theme-name-when-last     } { @include when-last     { @content } } }
+		@if $with-theme-when-ff       { .#{ $theme-name-when-ff       } { @include when-ff       { @content } } }
+		@if $with-theme-when-ie       { .#{ $theme-name-when-ie       } { @include when-ie       { @content } } }
+	}
+}
+
+@mixin declare-style(
+	$class-name,
+	$theme                   : $current-theme,
+	$is-themeless            : $current-is-themeless,
+	$with-themed-style       : $current-with-themed-style,
+	$with-theme-when-hovered : $current-with-theme-when-hovered,
+	$with-theme-when-active  : $current-with-theme-when-active, 
+	$with-theme-when-touching: $current-with-theme-when-touching, 
+	$with-theme-when-retina  : $current-with-theme-when-retina, 
+	$with-theme-when-mobile  : $current-with-theme-when-mobile, 
+	$with-theme-when-first   : $current-with-theme-when-first, 
+	$with-theme-when-last    : $current-with-theme-when-last, 
+	$with-theme-when-ff      : $current-with-theme-when-ff,
+	$with-theme-when-ie      : $current-with-theme-when-ie
+) {
+	@if $is-themeless {
+		// $themeless-style-name: get-themed-style-name( $class-name: $class-name );
+		@if $class-name != false { .#{ $class-name } { @content; } } @else { @content }
+	}
+	@else {
+		@if $with-themed-style {
+			$themed-style-name: get-themed-style-name( $class-name: $class-name, $theme: $theme );
+			@at-root { .#{ $themed-style-name } { @content; } }
+		}
+
+		@if $class-name != false { .#{ $class-name }, &.#{ $class-name } { @content; } } @else { @content }
+	}
+}
+
+@mixin declare-inverse-style(
+	$class-name,
+	$theme              : $current-theme,
+	$is-themeless       : $current-is-themeless,
+	$with-this-modifiers: $current-with-this-modifiers,
+	$with-themed-style  : $current-with-themed-style
+) {
+	@if $is-themeless {
+		@if $with-themed-style {
+			$themeless-style-name: get-themed-style-name( $class-name: $class-name );
+			.#{ $themeless-style-name } { @content; }
+		}
+
+		.#{ $class-inverse } { // inverse then and with class
+			.#{  $class-name }, 
+			&.#{ $class-name } {
+				@content;
+				// @extend .#{ $themeless-style-name } !optional; // The reason for the !optional is that when the style @content is actually empty, the resultant .#{ $themed-style-name } won't actually be created which will cause an indefinite hang in the SASS compiling. SASS doesn't yet let you do any kind of checking that @content exists or not, so adding this !optional is the only means of accounting for styles that basically aren't defined for the given theme.
+			}
+		}
+		@if $with-this-modifiers {
+			.#{ $class-name }.#{ $class-inverse-this } { // inverse-this with class
+				@content;
+				// @extend .#{ $themeless-style-name } !optional; // The reason for the !optional is that when the style @content is actually empty, the resultant .#{ $themed-style-name } won't actually be created which will cause an indefinite hang in the SASS compiling. SASS doesn't yet let you do any kind of checking that @content exists or not, so adding this !optional is the only means of accounting for styles that basically aren't defined for the given theme.
+			}
+		}
+	}
+	@else {
+		@if $with-themed-style {
+			$themed-style-name: get-themed-style-name( $class-name: $class-name, $theme: $theme );
+			.#{ $themed-style-name } { @content; }
+		}
+
+		#{ get-theme-selector( $theme: $theme ) } {
+			.#{  $class-inverse }, // theme, then inverse, with and then class 
+			&.#{ $class-inverse }, // them with inverse, with and then class
+			.#{  $class-inverse } & { // inverse then theme, with and then class
+				.#{  $class-name }, 
+				&.#{ $class-name } {
+					@content;
+					// @extend .#{ $themed-style-name } !optional; // The reason for the !optional is that when the style @content is actually empty, the resultant .#{ $themed-style-name } won't actually be created which will cause an indefinite hang in the SASS compiling. SASS doesn't yet let you do any kind of checking that @content exists or not, so adding this !optional is the only means of accounting for styles that basically aren't defined for the given theme.
+				}
+			}
+			@if $with-this-modifiers {
+				.#{  $class-name }, // theme, then class with inverse-this
+				&.#{ $class-name } { // theme with class with inverse-this
+					&.#{ $class-inverse-this } { 
+						@content;
+						// @extend .#{ $themed-style-name } !optional; // The reason for the !optional is that when the style @content is actually empty, the resultant .#{ $themed-style-name } won't actually be created which will cause an indefinite hang in the SASS compiling. SASS doesn't yet let you do any kind of checking that @content exists or not, so adding this !optional is the only means of accounting for styles that basically aren't defined for the given theme.
+					}
+				}
+			}
+		}
+	}
+}
+
+@mixin declare-secondary-style(
+	$class-name,
+	$theme              : $current-theme,
+	$is-themeless       : $current-is-themeless,
+	$with-this-modifiers: $current-with-this-modifiers,
+	$with-themed-style  : $current-with-themed-style
+) {
+	@if $is-themeless {
+		@if $with-themed-style {
+			$themeless-style-name: get-themed-style-name( $class-name: $class-name );
+			.#{ $themeless-style-name } { @content; }
+		}
+
+		.#{ $class-secondary } { // secondary then and with class
+			.#{  $class-name }, 
+			&.#{ $class-name } {
+				@content;
+				// @extend .#{ $themeless-style-name } !optional; // The reason for the !optional is that when the style @content is actually empty, the resultant .#{ $themed-style-name } won't actually be created which will cause an indefinite hang in the SASS compiling. SASS doesn't yet let you do any kind of checking that @content exists or not, so adding this !optional is the only means of accounting for styles that basically aren't defined for the given theme.
+			}
+		}
+		@if $with-this-modifiers {
+			.#{ $class-name }.#{ $class-secondary-this } { // secondary-this with class
+				@content;
+				// @extend .#{ $themeless-style-name } !optional; // The reason for the !optional is that when the style @content is actually empty, the resultant .#{ $themed-style-name } won't actually be created which will cause an indefinite hang in the SASS compiling. SASS doesn't yet let you do any kind of checking that @content exists or not, so adding this !optional is the only means of accounting for styles that basically aren't defined for the given theme.
+			}
+		}
+	}
+	@else {
+		@if $with-themed-style {
+			$themed-style-name: get-themed-style-name( $class-name: $class-name, $theme: $theme );
+			.#{ $themed-style-name } { @content; }
+		}
+
+		#{ get-theme-selector( $theme: $theme ) } {
+			.#{  $class-secondary }, // theme, then secondary, with and then class 
+			&.#{ $class-secondary }, // them with secondary, with and then class
+			.#{  $class-secondary } & { // theme with secondary with and then class
+				.#{  $class-name }, 
+				&.#{ $class-name } {
+					@content;
+					// @extend .#{ $themed-style-name } !optional; // The reason for the !optional is that when the style @content is actually empty, the resultant .#{ $themed-style-name } won't actually be created which will cause an indefinite hang in the SASS compiling. SASS doesn't yet let you do any kind of checking that @content exists or not, so adding this !optional is the only means of accounting for styles that basically aren't defined for the given theme.
+				}
+			}
+			@if $with-this-modifiers {
+				.#{  $class-name }, // theme, then class with secondary-this
+				&.#{ $class-name } { // theme with class with secondary-this
+					&.#{ $class-secondary-this } { 
+						@content;
+						// @extend .#{ $themed-style-name } !optional; // The reason for the !optional is that when the style @content is actually empty, the resultant .#{ $themed-style-name } won't actually be created which will cause an indefinite hang in the SASS compiling. SASS doesn't yet let you do any kind of checking that @content exists or not, so adding this !optional is the only means of accounting for styles that basically aren't defined for the given theme.
+					}
+				}
+			}
+		}
+	}
+}
+
+@mixin declare-inverse-secondary-style(
+	$class-name,
+	$theme              : $current-theme,
+	$is-themeless       : $current-is-themeless,
+	$with-this-modifiers: $current-with-this-modifiers,
+	$with-themed-style  : $current-with-themed-style
+) {
+	@if $is-themeless {
+		@if $with-themed-style {
+			$themeless-style-name: get-themed-style-name( $class-name: $class-name );
+			.#{ $themeless-style-name } { @content; }
+		}
+		
+		.#{ $class-inverse   } .#{ $class-secondary }, // inverse then secondary, with and then class
+		.#{ $class-secondary } .#{ $class-inverse   }, // secondary then inverse, with and then class
+		.#{ $class-inverse   }.#{  $class-secondary }  { // secondary with inverse, with and then class
+			.#{  $class-name }, 
+			&.#{ $class-name } {
+				@content;
+				// @extend .#{ $themeless-style-name } !optional; // The reason for the !optional is that when the style @content is actually empty, the resultant .#{ $themed-style-name } won't actually be created which will cause an indefinite hang in the SASS compiling. SASS doesn't yet let you do any kind of checking that @content exists or not, so adding this !optional is the only means of accounting for styles that basically aren't defined for the given theme.
+			}
+		}
+		.#{ $class-inverse } { // inverse with and then class, with secondary-this
+			.#{  $class-name }, 
+			&.#{ $class-name } {
+				&.#{ $class-secondary-this } {
+					@content;
+					// @extend .#{ $themeless-style-name } !optional; // The reason for the !optional is that when the style @content is actually empty, the resultant .#{ $themed-style-name } won't actually be created which will cause an indefinite hang in the SASS compiling. SASS doesn't yet let you do any kind of checking that @content exists or not, so adding this !optional is the only means of accounting for styles that basically aren't defined for the given theme.
+				}
+			}
+		}
+		.#{ $class-secondary } { // secondary with and then class, with inverse-this
+			.#{  $class-name }, 
+			&.#{ $class-name } {
+				&.#{ $class-inverse-this } {
+					@content;
+					// @extend .#{ $themeless-style-name } !optional; // The reason for the !optional is that when the style @content is actually empty, the resultant .#{ $themed-style-name } won't actually be created which will cause an indefinite hang in the SASS compiling. SASS doesn't yet let you do any kind of checking that @content exists or not, so adding this !optional is the only means of accounting for styles that basically aren't defined for the given theme.
+				}
+			}
+		}
+		@if $with-this-modifiers {
+			.#{ $class-inverse-this }.#{ $class-secondary-this }.#{ $class-name } { // theme then inverse-this with secondary-this, with class
+				@content;
+				// @extend .#{ $themed-style-name } !optional; // The reason for the !optional is that when the style @content is actually empty, the resultant .#{ $themed-style-name } won't actually be created which will cause an indefinite hang in the SASS compiling. SASS doesn't yet let you do any kind of checking that @content exists or not, so adding this !optional is the only means of accounting for styles that basically aren't defined for the given theme.
+			}
+		}
+	}
+	@else {
+		@if $with-themed-style {
+			$themed-style-name: get-themed-style-name( $class-name: $class-name, $theme: $theme );
+			.#{ $themed-style-name } { @content; }
+		}
+
+		#{ get-theme-selector( $theme: $theme ) } {
+			.#{  $class-inverse   } .#{ $class-secondary }, // theme then inverse, then secondary, with and then class
+			.#{  $class-secondary } .#{ $class-inverse   }, // theme then secondary, then inverse, with and then class
+			.#{  $class-inverse   }.#{  $class-secondary }, // theme then inverse with secondary, with and then class
+			&.#{ $class-inverse   } .#{ $class-secondary }, // theme with inverse, then secondary, with and then class
+			&.#{ $class-secondary } .#{ $class-inverse   }, // theme with secondary, then inverse, with and then class
+			&.#{ $class-inverse   }.#{  $class-secondary }, // theme with inverse with secondary, with and then class
+			.#{  $class-inverse   } .#{ $class-secondary } &, // inverse, then secondary, then theme, with and then class
+			.#{  $class-secondary } .#{ $class-inverse   } &, // secondary, then inverse, then theme, with and then class
+			.#{  $class-inverse   }.#{  $class-secondary } &  { // inverse with secondary, then theme, with and then class
+				.#{  $class-name }, 
+				&.#{ $class-name } {
+					@content;
+					// @extend .#{ $themed-style-name } !optional; // The reason for the !optional is that when the style @content is actually empty, the resultant .#{ $themed-style-name } won't actually be created which will cause an indefinite hang in the SASS compiling. SASS doesn't yet let you do any kind of checking that @content exists or not, so adding this !optional is the only means of accounting for styles that basically aren't defined for the given theme.
+				}
+			}
+			@if $with-this-modifiers {
+				.#{  $class-inverse }, // theme then inverse, with and then class, with secondary-this
+				&.#{ $class-inverse }, // theme with inverse, with and then class, with secondary-this
+				.#{  $class-inverse } & { // inverse then theme, with and then class, with secondary-this
+					.#{  $class-name }, 
+					&.#{ $class-name } {
+						&.#{ $class-secondary-this } {
+							@content;
+							// @extend .#{ $themed-style-name } !optional; // The reason for the !optional is that when the style @content is actually empty, the resultant .#{ $themed-style-name } won't actually be created which will cause an indefinite hang in the SASS compiling. SASS doesn't yet let you do any kind of checking that @content exists or not, so adding this !optional is the only means of accounting for styles that basically aren't defined for the given theme.
+						}
+					}
+				}
+				.#{  $class-secondary }, // theme then secondary, with and then class, with inverse-this
+				&.#{ $class-secondary }, // theme with secondary, with and then class, with inverse-this
+				.#{  $class-secondary } & { // secondary then theme, with and then class, with inverse-this
+					.#{  $class-name }, 
+					&.#{ $class-name } {
+						&.#{ $class-inverse-this } {
+							@content;
+							// @extend .#{ $themed-style-name } !optional; // The reason for the !optional is that when the style @content is actually empty, the resultant .#{ $themed-style-name } won't actually be created which will cause an indefinite hang in the SASS compiling. SASS doesn't yet let you do any kind of checking that @content exists or not, so adding this !optional is the only means of accounting for styles that basically aren't defined for the given theme.
+						}
+					}
+				}
+				.#{ $class-inverse-this }.#{ $class-secondary-this }, // theme then inverse-this with secondary-this, with class
+				&.#{ $class-inverse-this }.#{ $class-secondary-this } { // theme with inverse-this with secondary-this, with class
+					&.#{ $class-name } {
+						@content;
+						// @extend .#{ $themed-style-name } !optional; // The reason for the !optional is that when the style @content is actually empty, the resultant .#{ $themed-style-name } won't actually be created which will cause an indefinite hang in the SASS compiling. SASS doesn't yet let you do any kind of checking that @content exists or not, so adding this !optional is the only means of accounting for styles that basically aren't defined for the given theme.
+					}
+				}
+			}
+		}
+	}
+}

@@ -1,30 +1,45 @@
-<div>
+<div class="sans-serif text-shadowed">
 
 	<div
+		class       ="below fixed tl whole-width whole-height"
+		c-on-resize ="windowHeight = height"
+	></div>
+
+	<div
+		class       ="fixed way-way-above tl whole-width nowrap overflow-scroll black sheer less padded shadow deep-shadow-when-hovered slow transitions"
 		s-on-resize ="headerHeight = height"
 		ng-init     ="uiSrefs = [ 'things', 'stuff' ]"
 	>
 
 		<select
+			class      ="select h4 less r-margin"
 			ng-options ="language for language in State.$languages"
 			ng-model   ="State.$language"
 		></select>
 
 		<a
-			ng-repeat ="uiSref in uiSrefs"
-			ui-sref   ="{{ uiSref }}"
+			class          ="h4 less r-margin inline-block less lr-padded red hybrid-button hardware-render"
+			ng-repeat      ="uiSref in uiSrefs"
+			ui-sref        ="{{ uiSref }}"
+			ui-sref-active ="active"
 		>
 			{{ uiSref }}{{ ! $last ? ', ' : '' }}
 		</a>
 
-		<span ng-if="State.$stateChanging">
+		<span
+			class ="less r-margin"
+			ng-if ="State.$stateChanging"
+		>
 			loading...
 		</span>
 	</div>
 
-	<div
-		ng-style ="{ 'padding-top': headerHeight }"
-		ng-transclude
-	></div>
+	<div ng-style="{ 'padding-top': headerHeight }">
+		<div
+			class    ="relative"
+			ng-style ="{ 'min-height': windowHeight - headerHeight }"
+			ng-transclude
+		></div>
+	</div>
 
 </div>

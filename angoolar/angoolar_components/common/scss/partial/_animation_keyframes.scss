@@ -1,0 +1,88 @@
+@mixin keyframes-fade-in-rotate-forward {
+	@include keyframes( $class-fade-in-rotate-forward ) {
+		0% {
+			@include opacity( 0 );
+			@include create-transform( $rotate-x: -90deg, $origin-y: $default-origin-y, $perspective: $default-perspective );
+		}
+		25% {
+			@include opacity( 0 );
+		}
+		100% {
+			@include opacity( 1 );
+			@include create-transform( $rotate-x: 0deg, $origin-y: $default-origin-y, $perspective: $default-perspective );
+		}
+	}
+}
+
+@mixin keyframes-fade-out-rotate-back {
+	@include keyframes( $class-fade-out-rotate-back ) {
+		0% {
+			@include opacity( 1 );
+			@include create-transform( $rotate-x: 0deg, $origin-y: $default-origin-y, $perspective: $default-perspective );
+		}
+		25% {
+			@include opacity( 0 );
+		}
+		100% {
+			@include create-transform( $rotate-x: -90deg, $origin-y: $default-origin-y, $perspective: $default-perspective );
+		}
+	}
+}
+
+@mixin keyframes-spin {
+	@include keyframes( $class-spin ) {
+		0% {
+			@include create-transform( $rotate-z: 0deg );
+		}
+		100% {
+			@include create-transform( $rotate-z: 360deg );
+		}
+	}
+}
+
+@mixin keyframes-fade-out {
+	@include keyframes( $class-fade-out ) {
+		0% {
+			@include opaque;
+		}
+		100% {
+			@include transparent;
+		}
+	}
+}
+
+@mixin keyframes-fade-in {
+	@include keyframes( $class-fade-in ) {
+		0% {
+			@include transparent;
+		}
+		100% {
+			@include opaque;
+		}
+	}
+}
+
+@mixin keyframes-scale-in {
+	@include keyframes( $class-scale-in ) {
+		0% {
+			@include scale( 0, 0, $default-perspective );
+		}
+		100% {
+			@include scale( 1, 1, $default-perspective );
+		}
+	}
+}
+
+@mixin keyframes-pulse {
+	@include keyframes( $class-pulse ) {
+		0% {
+			@include scale( 1, 1 );
+		}
+		5% {
+			@include scale( 1 + $pulse-scale-extent, 1 + $pulse-scale-extent );
+		}
+		10% {
+			@include scale( 1, 1 );
+		}
+	}
+}
